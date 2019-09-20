@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# folders to ignore to save storage and bandwidth
+data/
+output/
