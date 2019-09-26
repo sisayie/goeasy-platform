@@ -14,7 +14,7 @@ deploy:
     on:
       branch: master
   - provider: script
-    script: docker tag gep linksmart/gep:${TRAVIS_TAG} &&
-      docker push linksmart/gep:${TRAVIS_TAG}
+    script: docker tag gep sisayie/gep:${TRAVIS_TAG} &&
+      docker push sisayie/gep:${TRAVIS_TAG}
     on:
       tags: true
