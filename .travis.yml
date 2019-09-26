@@ -16,5 +16,3 @@ deploy:
   - provider: script
     script: docker tag linksmart/gep linksmart/gep:${TRAVIS_TAG} &&
       docker push linksmart/gep:${TRAVIS_TAG}
-    on:
-      tags: true
