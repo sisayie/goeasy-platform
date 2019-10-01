@@ -1,14 +1,14 @@
 version: '3.5'
 services:
   flask:
-    image: goeasy-flask
+    image: sisayie/goeasy-flask
     build:
       context: .
       dockerfile: Dockerfile-flask
     volumes:
       - "./:/app"
   nginx:
-    image: goeasy-nginx
+    image: sisayie/goeasy-nginx
     build:
       context: .
       dockerfile: Dockerfile-nginx
