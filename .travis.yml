@@ -10,11 +10,11 @@ before_deploy:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 deploy:
   - provider: script
-    script: docker push gep:latest
+    script: docker push goeasy-platform:latest
     on:
       branch: master
   - provider: script
-    script: docker tag gep sisayie/gep:${TRAVIS_TAG} &&
-      docker push sisayie/gep:${TRAVIS_TAG}
+    script: docker tag goeasy-platform sisayie/goeasy-platform:${TRAVIS_TAG} &&
+      docker push sisayie/goeasy-platform:${TRAVIS_TAG}
     on:
       tags: true
