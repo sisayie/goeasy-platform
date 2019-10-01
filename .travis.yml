@@ -3,13 +3,12 @@ language: minimal
 
 before_script:
     - export VERSION=${TRAVIS_BRANCH}  BUILDNUM=${TRAVIS_BUILD_NUMBER}
-
+script
+    - docker-compose -f docker-compose.yml build
 before_deploy:
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 deploy:
   - provider: script
-    - docker-compose -f docker-compose.yml build
-  - provider: script
-    script: docker push goeasy-platform:latest
+    script: docker push sisayie/goeasy-flask:latest && docker push sisayie/goeasy-nginx:latest
     on:
       branch: master
