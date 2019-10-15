@@ -1,0 +1,101 @@
+---
+swagger: "2.0"
+info:
+  description: "Sample version of GoEasy API for communication with the Anonymizer."
+  version: "3"
+  title: "Anonymizer API"
+  contact:
+    email: "rossen.rachev@fit.fraunhofer.de"
+host: "galileocloud.goeasyproject.eu"
+basePath: "/anonymizer"
+tags:
+- name: "publicdb"
+  description: "Anonymizer for public database"
+- name: "privatdb"
+  description: "Anonymizer for private database"
+schemes:
+- "http"
+paths:
+  /publicdb:
+    post:
+      tags:
+      - "publicdb"
+      summary: "Send data to Anonymizer for storing in public database"
+      operationId: "create_simulation"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Data to be stored"
+        required: true
+        schema:
+          $ref: "#/definitions/Trip_Data"
+      responses:
+        200:
+          description: "ID of the stored data set"
+          schema:
+            type: "string"
+      x-swagger-router-controller: "swagger_server.controllers.anonymizer_controller"
+definitions:
+  Trip_Data:
+    type: "object"
+    required:
+    - common
+    - positions
+    properties:
+      common:
+        $ref: "#/definitions/Trip_Definition"
+      positions:
+        type: "array"
+        items:
+          $ref: "#/definitions/Position"
+      behaviour:
+        type: "array"
+        items:
+          $ref: "#/definitions/Behaviour_Description"
+      sensordata: 
+        type: "string"
+  Trip_Definition:
+    type: "object"
+    required:
+    - "tockenID"
+    - "tripType"
+    properties:
+      tockenID:
+        type: "string"
+      tripType:
+        type: "string"
+      sessionID:
+        type: "string"
+  Position:
+    type: "object"
+    required:
+    - "lat"
+    - "lon"
+    - "time"
+    properties:
+      lat:
+        type: "number"
+      lon:
+        type: "number"
+      time:
+        type: "integer"
+  Behaviour_Description:
+    type: "object"
+    required:
+    - "start"
+    - "end"
+    - "mode"
+    properties:
+      start:
+        $ref: "#/definitions/Position"
+      end:
+        $ref: "#/definitions/Position"
+      mode:
+        type: "string"
+        enum: [walk, bike, drive, bus, train]
+      detection_type:
+        type: "string"
+        enum: [user_defined, app_defined, tpv_defined]
+externalDocs:
+  description: "Find out more about GoEasy"
+  url: "http://goeasyproject.eu/"
