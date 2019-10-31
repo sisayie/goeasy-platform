@@ -106,3 +106,4 @@ venv.bak/
 # folders to ignore to save storage and bandwidth
 data/
 output/
+.cmds

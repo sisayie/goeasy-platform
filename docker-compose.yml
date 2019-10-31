@@ -1,28 +1,30 @@
-version: '3.5'
+version: '3'
 services:
-  flask:
-    image: sisayie/goeasy-flask
-    build:
-      context: .
-      dockerfile: Dockerfile-flask
-    volumes:
-      - "./:/app"
-  nginx:
-    image: sisayie/goeasy-nginx
-    build:
-      context: .
-      dockerfile: Dockerfile-nginx
-    ports:
-      - 5000:80
-    depends_on:
-      - flask
-  database:
-    container_name: postgres
+  db:
+    restart: always
     image: postgres:latest
-    env_file: database.conf
+    container_name: pubdb
     ports:
-      - 5432:5432  
+      - "5432:5432"
+    env_file:
+      - .env
     volumes:
-      - db_volume:/var/lib/postgresql
-volumes:
-  db_volume:
+      - ./postgres:/var/lib/postgresql
+  anonengine:
+    build: ./application
+    container_name: anonengine
+    restart: always
+    links:
+      - db
+    ports:
+      - "5003:5003"
+  web:
+    build: ./nginx
+    container_name: web
+    restart: always
+    depends_on:
+      - anonengine
+    links:
+      - anonengine
+    ports:
+      - "8880:8880"
