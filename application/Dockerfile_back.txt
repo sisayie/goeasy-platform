@@ -1,0 +1,17 @@
+FROM python:3.6
+MAINTAINER Sisay Chala
+
+RUN mkdir -p /opt/services/anonengine/src
+
+COPY requirements.txt /opt/services/anonengine/src/
+
+WORKDIR /opt/services/anonengine/src
+
+RUN pip install -r requirements.txt
+
+COPY . /opt/services/anonengine/src
+
+EXPOSE 5003
+
+#CMD ["uwsgi", "wsgi.ini"]
+CMD ["python", "application.py"]

@@ -11,4 +11,5 @@ RUN pip install -r requirements.txt
 
 EXPOSE 5003
 
-CMD ["uwsgi", "wsgi.ini"]
+#CMD ["uwsgi", "wsgi.ini"]
+CMD ["python", "application.py"]

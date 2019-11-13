@@ -3,7 +3,7 @@ services:
   db:
     restart: always
     image: postgres:latest
-    container_name: pubdb
+    container_name: db
     ports:
       - "5432:5432"
     env_file:
@@ -16,8 +16,12 @@ services:
     restart: always
     links:
       - db
+    depends_on:
+      - db
     ports:
       - "5003:5003"
+    volumes:
+      - .:/opt/services/anonengine/src
   web:
     build: ./nginx
     container_name: web
@@ -28,3 +32,5 @@ services:
       - anonengine
     ports:
       - "8880:8880"
+volumes:
+  postgres:
