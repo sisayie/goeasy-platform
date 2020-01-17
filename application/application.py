@@ -5,12 +5,15 @@ Created on Tue Sep 10 13:37:10 2019
 @author: chala
 """
 from flask import Flask
-
-from flask_restplus import Api, Resource, fields
+from flask_sqlalchemy import SQLAlchemy
+#from flask_restplus import Api, Resource, fields
+from flask_restplus import fields
+from flask_restplus_patched import Api, Namespace, Resource, ModelSchema
 
 import json
 
 application = Flask(__name__)
+db = SQLAlchemy(application)
 api = Api(application, version='1.0', title='Anonymizer Api', description='GOEASY Api for Anonymizing Journeys')
 name_space = api.namespace('anonymizer', description='Measurements for LBS')
 
@@ -70,6 +73,17 @@ all_journeys2 = [
         ]
     }
 ]
+
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+
+
+class UserSchema(ModelSchema):
+    class Meta:
+        model = User
+
 
 @application.route("/")
 #def hello():
@@ -142,7 +156,7 @@ class JourneysList(Resource):
         new_journey = anonymize(api.payload, 'deviceId',"testReplaceValue123")
         #anonym_new_journey = 
         #all_journey = json.loads(all_journeys)
-        all_journeys.append(new_journey)
+        all_journeys.append(new_journey) #Replace this with a code to write to db
         return {'result': 'New journey' + str(new_journey) + ' added'}, 201
         
 #@name_space.route("/<int:id>")
@@ -164,4 +178,8 @@ class JourneysList(Resource):
 #        }
 
 if __name__ == "__main__":
+    db.create_all()
+    with db.session.begin(nested=True):
+        db.session.add(User(name='user1'))
+        db.session.add(User(name='user2'))
     application.run(host='0.0.0.0', port=5003, debug=True)

@@ -20,6 +20,8 @@ services:
       - db
     ports:
       - "5003:5003"
+    env_file:
+      - .env
     volumes:
       - .:/opt/services/anonengine/src
   web:
