@@ -7,7 +7,7 @@ Created on Tue Sep 10 13:37:10 2019
 # Database
 from flask import request
 
-from privacy_guard import anonymize
+from privacy_guard import anonymize, rangen
 
 from model import *
 
@@ -47,8 +47,8 @@ def add_new(): #TODO: Sanitize other conditions
             response = {"status": "Success",
                         "message": "New journey registered"
                         }
-                         
-            anon_journey = anonymize(data, 'deviceId',987654) #TODO: 
+            ano_id = rangen()             
+            anon_journey = anonymize(data, 'deviceId',ano_id) 
       
             #new_address = Address(telephone = data['address']['tel'], email = data['address']['email'])
             new_positions = []
