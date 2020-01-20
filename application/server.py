@@ -24,9 +24,11 @@ class Publicstorage(Resource):
     @api.expect(Journey) 
     def post(self):
         response = add_new()
-        return response, 200
+        return response
 
-@api.route("/publicstorage/<int:id>")
+#@api.route("/publicstorage/<int:id>")
+@ns.route("/publicstorage/<int:id>")
+@ns.route("/anonimizer/<int:id>")
 class Publicstorage(Resource):
     def get(self, id):
         data = fetch_one(id)

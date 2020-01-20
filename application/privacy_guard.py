@@ -1,8 +1,6 @@
-from random import seed
 from random import randint
 
 def rangen():
-    seed(1)
     value = randint(1000000,9999999)
     return value
 

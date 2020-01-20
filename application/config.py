@@ -23,20 +23,15 @@ db = os.environ['POSTGRES_DB']
 host = os.environ['POSTGRES_HOST']
 port = os.environ['POSTGRES_PORT']
 
-DB_URI = 'postgresql+psycopg2://{user}:{pw}@{host}:{port}/{db}'.format(
-                                                                        user=user,
-                                                                        pw=pwd,
-                                                                        host=host,
-                                                                        port=port,
-                                                                        db=db
-                                                                        )
+DB_URI = 'postgresql+psycopg2://{user}:{pw}@{host}:{port}/{db}'.format(user=user, pw=pwd, host=host, port=port, db=db)
 
 app = Flask(__name__) 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
 app.config['SQLALCHEMY_ECHO'] = True
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['JSON_SORT_KEYS'] = False
+#app.config["JSON_SORT_KEYS"] = False
+
 db = SQLAlchemy(app)
 
 api = Api(app=app, 

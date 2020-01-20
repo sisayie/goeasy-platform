@@ -11,10 +11,12 @@ from privacy_guard import anonymize, rangen
 
 from model import *
 
+from marshmallow import Schema, fields, pprint
 
 #class Database:
 def fetch_all():
     data = Journey.query.all()
+
     if data is not None:
         response = {"status": "Success",
                     "message": "New journey registered"
@@ -28,6 +30,7 @@ def fetch_all():
         
 def fetch_one(id):
     journey = Journey.query.filter_by(id=id).first()
+
     if journey is not None:
         return journey_schema.jsonify(journey)
     else:
@@ -54,10 +57,9 @@ def add_new(): #TODO: Sanitize other conditions
             new_positions = []
             for element in anon_journey['positions']:
                 new_positions.append(Position(lat = element['lat'],
-                                        lon = element['lon'],
-                                        timestamp = datetime.fromtimestamp(element['time']/1000), #https://stackoverflow.com/questions/10286224/javascript-timestamp-to-python-datetime-conversion
-                                        authenticity = element['authenticity']))
-            
+                                              lon = element['lon'],
+                                              timestamp = datetime.fromtimestamp(element['time']/1000), #https://stackoverflow.com/questions/10286224/javascript-timestamp-to-python-datetime-conversion
+                                              authenticity = element['authenticity']))
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
                                 sessionId = anon_journey['sessionId'],
