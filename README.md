@@ -3,8 +3,9 @@ GET:
 curl -X GET "https://localhost:5003/anonymizer/publicstorage" -H "accept: application/json"
 
 POST:
-curl -X POST "https://localhost:5003/anonymizer/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '{
-       ``` "common": { 
+curl -X POST "https://localhost:5003/anonymizer/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
+     ```{
+        "common": { 
             "deviceId": 123445,
             "sessionID": 456789,
             "sourceApp": "ApesMobility"
@@ -43,4 +44,4 @@ curl -X POST "https://localhost:5003/anonymizer/publicstorage" -H "accept: appli
             {"data":{"x":36.672806,"y":-35.711693,"z":-137.7186},"name":"magnetometer","time":1570390867176},
             {"data":{"x":27.774622,"y":-25.288143,"z":-139.21454},"name":"magnetometer","time":1570390892173}
         ]
-    }' ```
+    }``` '
