@@ -14,5 +14,3 @@ Flask-SQLAlchemy==2.4.1
 marshmallow>=2.13.5,<3
 flask-marshmallow==0.10.1
 marshmallow-sqlalchemy==0.21.0
-webargs>=1.4.0,<2
-apispec>=0.20.0,<0.39
