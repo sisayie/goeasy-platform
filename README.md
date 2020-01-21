@@ -9,7 +9,11 @@ curl -X POST "https://localhost:5003/gep/publicstorage" -H "accept: application/
         "sessionID": 456789,
         "sourceApp": "ApesMobility",  
         "positions": [
-            {"lat":43.4541819, "lon":11.8679015, "time":1570390750300, "authenticity": 1},
+            {"lat":43.4541819, 
+		"lon":11.8679015, 
+		"time":1570390750300, 
+		"authenticity": 1
+		},
             {"lat":43.4541711, "lon":11.8679564, "time":1570390752305, "authenticity": 0},
             {"lat":43.4542047, "lon":11.8679665, "time":1570390757171, "authenticity": 1},
             {"lat":43.4541974, "lon":11.8679352, "time":1570390770173, "authenticity": 1},
