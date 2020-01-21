@@ -5,7 +5,7 @@ Created on Tue Sep 10 13:37:10 2019
 @author: chala
 """
 #server
-#from database import Database as crud
+#from database import Database as crud #To organize db funcaions into a class
 from database import *
 from config import *
 from model import Journey

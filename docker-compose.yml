@@ -14,10 +14,10 @@ services:
     build: ./application
     container_name: anonengine
     restart: always
-    links:
-      - db
-    depends_on:
-      - db
+    #links:
+    #  - db
+    #depends_on:
+    #  - db
     ports:
       - "5003:5003"
     env_file:
