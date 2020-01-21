@@ -1,15 +1,13 @@
 GET:
 
-curl -X GET "https://localhost:5003/anonymizer/publicstorage" -H "accept: application/json"
+curl -X GET "https://localhost:5003/gep/publicstorage" -H "accept: application/json"
 
 POST:
-curl -X POST "https://localhost:5003/anonymizer/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
+curl -X POST "https://localhost:5003/gep/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
      ```{
-        "common": { 
-            "deviceId": 123445,
-            "sessionID": 456789,
-            "sourceApp": "ApesMobility"
-        },  
+        "deviceId": 123445,
+        "sessionID": 456789,
+        "sourceApp": "ApesMobility",  
         "positions": [
             {"lat":43.4541819, "lon":11.8679015, "time":1570390750300, "authenticity": 1},
             {"lat":43.4541711, "lon":11.8679564, "time":1570390752305, "authenticity": 0},
