@@ -10,7 +10,6 @@ flask-restplus==0.13.0
 requests
 
 Flask-SQLAlchemy==2.4.1
-
 marshmallow>=2.13.5,<3
 flask-marshmallow==0.10.1
 marshmallow-sqlalchemy==0.21.0
