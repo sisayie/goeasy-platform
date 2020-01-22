@@ -4,6 +4,7 @@ MAINTAINER Sisay Chala
 RUN mkdir /application
 
 COPY . /application
+COPY requirements.txt /application
 
 WORKDIR /application
 
