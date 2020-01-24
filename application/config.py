@@ -39,6 +39,6 @@ api = Api(app=app,
           title='Anonymizer Api', 
           description='GOEASY Api for Anonymizing Journeys')
 
-ns = api.namespace('gep',description = 'GOEASY Platform Measurements for LBS')
+ns = api.namespace('paib',description = 'GOEASY Platform Measurements for LBS')
 
 ma = Marshmallow(api)
