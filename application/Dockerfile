@@ -10,6 +10,7 @@ WORKDIR /application
 
 RUN pip install -r requirements.txt
 
+#Should be modified at on containers
 ENV POSTGRES_USER="postgres"
 ENV POSTGRES_PASSWORD="password"
 ENV POSTGRES_DB="pubdb"
