@@ -46,7 +46,7 @@ class Journey(db.Model):
     a_behaviour = db.Column(db.String(10)) # app_defined_behaviour
     u_behaviour = db.Column(db.String(10))  # user_defined_behaviour
     
-    positions = db.relationship("Position", backref = "positions", uselist=True)
+    positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     
     def __init__(self, deviceId, sessionId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, positions = None):
         #self.id = id
