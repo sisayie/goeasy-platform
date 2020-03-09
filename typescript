@@ -1,120 +1,0 @@
-Script started on 2020-01-28 11:27:40+0100
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ sudo docker run -d -p 9000:9000 portainer/portainer
-[sudo] password for sisay: 
-docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
-See 'docker run --help'.
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ sudo docker run -d -p 9000:9000 portainer/portainer
-docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
-See 'docker run --help'.
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ sudo docker run -d -p 9000:9000 portainer/portainer
-docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
-See 'docker run --help'.
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker --hlep[K[K[Kelp
-
-Usage:	docker [OPTIONS] COMMAND
-
-A self-sufficient runtime for containers
-
-Options:
-      --config string      Location of client config files (default "/home/sisay/.docker")
-  -D, --debug              Enable debug mode
-  -H, --host list          Daemon socket(s) to connect to
-  -l, --log-level string   Set the logging level ("debug"|"info"|"warn"|"error"|"fatal") (default "info")
-      --tls                Use TLS; implied by --tlsverify
-      --tlscacert string   Trust certs signed only by this CA (default "/home/sisay/.docker/ca.pem")
-      --tlscert string     Path to TLS certificate file (default "/home/sisay/.docker/cert.pem")
-      --tlskey string      Path to TLS key file (default "/home/sisay/.docker/key.pem")
-      --tlsverify          Use TLS and verify the remote
-  -v, --version            Print version information and quit
-
-Management Commands:
-  builder     Manage builds
-  config      Manage Docker configs
-  container   Manage containers
-  engine      Manage the docker engine
-  image       Manage images
-  network     Manage networks
-  node        Manage Swarm nodes
-  plugin      Manage plugins
-  secret      Manage Docker secrets
-  service     Manage services
-  stack       Manage Docker stacks
-  swarm       Manage Swarm
-  system      Manage Docker
-  trust       Manage trust on Docker images
-  volume      Manage volumes
-
-Commands:
-  attach      Attach local standard input, output, and error streams to a running container
-  build       Build an image from a Dockerfile
-  commit      Create a new image from a container's changes
-  cp          Copy files/folders between a container and the local filesystem
-  create      Create a new container
-  diff        Inspect changes to files or directories on a container's filesystem
-  events      Get real time events from the server
-  exec        Run a command in a running container
-  export      Export a container's filesystem as a tar archive
-  history     Show the history of an image
-  images      List images
-  import      Import the contents from a tarball to create a filesystem image
-  info        Display system-wide information
-  inspect     Return low-level information on Docker objects
-  kill        Kill one or more running containers
-  load        Load an image from a tar archive or STDIN
-  login       Log in to a Docker registry
-  logout      Log out from a Docker registry
-  logs        Fetch the logs of a container
-  pause       Pause all processes within one or more containers
-  port        List port mappings or a specific mapping for the container
-  ps          List containers
-  pull        Pull an image or a repository from a registry
-  push        Push an image or a repository to a registry
-  rename      Rename a container
-  restart     Restart one or more containers
-  rm          Remove one or more containers
-  rmi         Remove one or more images
-  run         Run a command in a new container
-  save        Save one or more images to a tar archive (streamed to STDOUT by default)
-  search      Search the Docker Hub for images
-  start       Start one or more stopped containers
-  stats       Display a live stream of container(s) resource usage statistics
-  stop        Stop one or more running containers
-  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE
-  top         Display the running processes of a container
-  unpause     Unpause all processes within one or more containers
-  update      Update configuration of one or more containers
-  version     Show the Docker version information
-  wait        Block until one or more containers stop, then print their exit codes
-
-Run 'docker COMMAND --help' for more information on a command.
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ [H[2J]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker --helpsudo docker run -d -p 9000:9000 portainer/portainer[1P[1P[1P[1P[1P
-Unable to find image 'portainer/portainer:latest' locally
-latest: Pulling from portainer/portainer
-
-[1A[1K[Kd1e017099d17: Pulling fs layer [1B
-[1A[1K[Kcc61cd4105c3: Pulling fs layer [1B[2A[1K[Kd1e017099d17: Downloading [>                                                  ]   1.84kB/155.2kB[2B[2A[1K[Kd1e017099d17: Downloading [==================================================>]  155.2kB/155.2kB[2B[2A[1K[Kd1e017099d17: Verifying Checksum [2B[2A[1K[Kd1e017099d17: Download complete [2B[1A[1K[Kcc61cd4105c3: Downloading [>                                                  ]  261.2kB/24.61MB[1B[2A[1K[Kd1e017099d17: Extracting [==========>                                        ]  32.77kB/155.2kB[2B[2A[1K[Kd1e017099d17: Extracting [==================================================>]  155.2kB/155.2kB[2B[1A[1K[Kcc61cd4105c3: Downloading [=========>                                         ]  4.668MB/24.61MB[1B[2A[1K[Kd1e017099d17: Pull complete [2B[1A[1K[Kcc61cd4105c3: Downloading [===================>                               ]  9.641MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Downloading [==============================>                    ]  14.88MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Downloading [=========================================>         ]  20.37MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Verifying Checksum [1B[1A[1K[Kcc61cd4105c3: Download complete [1B[1A[1K[Kcc61cd4105c3: Extracting [>                                                  ]  262.1kB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [=>                                                 ]  786.4kB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [==========>                                        ]  4.981MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [====================>                              ]  10.22MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [============================>                      ]  13.89MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [=======================================>           ]   19.4MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Extracting [==================================================>]  24.61MB/24.61MB[1B[1A[1K[Kcc61cd4105c3: Pull complete [1BDigest: sha256:c016f0e9b92b2dd4fe097d91ace2f21ed3ce34ade43ee2a95d3d4da1e984b96f
-Status: Downloaded newer image for portainer/portainer:latest
-adfd73fe36c9ae7ff10b357d19c07c7b94be890e32940436146827ada9ad3402
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker ps][K
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                     NAMES
-adfd73fe36c9        portainer/portainer          "/portainer"             7 seconds ago       Up 7 seconds        0.0.0.0:9000->9000/tcp                    heuristic_hawking
-234383f4969a        goeasy-platform_web          "nginx -g 'daemon of…"   3 days ago          Up About a minute   80/tcp, 443/tcp, 0.0.0.0:8880->8880/tcp   web
-f874fbde44fe        goeasy-platform_anonengine   "python server.py"       3 days ago          Up About a minute   0.0.0.0:5003->5003/tcp                    anonengine
-cf86cad60345        postgres:latest              "docker-entrypoint.s…"   3 days ago          Up About a minute   0.0.0.0:5432->5432/tcp                    db
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker container ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                     NAMES
-234383f4969a        goeasy-platform_web          "nginx -g 'daemon of…"   3 days ago          Up 24 minutes       80/tcp, 443/tcp, 0.0.0.0:8880->8880/tcp   web
-f874fbde44fe        goeasy-platform_anonengine   "python server.py"       3 days ago          Up 24 minutes       0.0.0.0:5003->5003/tcp                    anonengine
-cf86cad60345        postgres:latest              "docker-entrypoint.s…"   3 days ago          Up 24 minutes       0.0.0.0:5432->5432/tcp                    db
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker container psps[Krun -d -p 9000:9000 portainer/portainer
-4d55037c8241ac1d3e97b52ac41d16aac8cf1e9e9a92b155a16b2c35611442a3
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ docker ps[K[Kcoan[K[Kntainer ps
-CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS              PORTS                                     NAMES
-4d55037c8241        portainer/portainer          "/portainer"             5 minutes ago       Up 5 minutes        0.0.0.0:9000->9000/tcp                    boring_dubinsky
-234383f4969a        goeasy-platform_web          "nginx -g 'daemon of…"   3 days ago          Up 30 minutes       80/tcp, 443/tcp, 0.0.0.0:8880->8880/tcp   web
-f874fbde44fe        goeasy-platform_anonengine   "python server.py"       3 days ago          Up 30 minutes       0.0.0.0:5003->5003/tcp                    anonengine
-cf86cad60345        postgres:latest              "docker-entrypoint.s…"   3 days ago          Up 30 minutes       0.0.0.0:5432->5432/tcp                    db
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ ls va[K[K/var/lib/doc[K[K
-dbus/                dhcp/                dictionaries-common/ dpkg/                
-]0;sisay@omot: /c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[01;32msisay@omot[00m:[01;34m/c/Users/chala/Documents/FhG/Projects/Running/GOEASY/goeasy-platform[00m$ ls /var/lib/d[K[K[K[K[K[K[K[K[K[K[K[K[K/[Kls /va/[Kr [K/lib/
-AccountsService/         dhcp/                    initramfs-tools/         lxd/                     plymouth/                systemd/                 upda
