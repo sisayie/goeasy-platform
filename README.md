@@ -7,14 +7,11 @@ In order to provide its services, the core GOEASY enabled devices and platform d
 Implementation was done using microservice architecture using Python programming language, NGINX, and PostgreSQL.
 
 
-## Getting Started
-
-
-### Prerequisites
+## Prerequisites
 
 In order to run GOEASY platform, you need to have the modules listed in [`requirements.txt`](https://github.com/sisayie/goeasy-platform/blob/master/application/requirements.txt) installed or build docker image or simply pull the docker image from dockerHub.
 
-### Installing
+## Installing
 
 ### Building Image using Docker
 GOEASY Platform is easy to install and deploy in a Docker container. By default, the Docker will expose port 5003, so change this within the docker-compose if necessary. When ready, simply use the docker-compose to build the image.
@@ -49,14 +46,14 @@ docker pull goeasy/gep_web:latest && docker pull goeasy/gep_anonengine:latest
 
 You can run CRUD operations on the database as follows:
 
-#### GET:
+#### GET
 
 ```
-curl -X GET "https://localhost:5003/gep/publicstorage" -H "accept: application/json"
+curl -X GET "https://localhost:5003/GEP/paib/publicstorage" -H "accept: application/json"
 ```
 
-#### POST:
-curl -X POST "https://localhost:5003/gep/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
+#### POST
+curl -X POST "https://localhost:5003/GEP/paib/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
      ```{
         "deviceId": 123445,
         "sessionID": 456789,
@@ -100,6 +97,10 @@ curl -X POST "https://localhost:5003/gep/publicstorage" -H "accept: application/
             {"data":{"x":27.774622,"y":-25.288143,"z":-139.21454},"name":"magnetometer","time":1570390892173}
         ]
     }``` '
+
+#### PUT
+
+https://localhost:5003/GEP/paib/publicstorage/{id}
 
 ## Authors
 
