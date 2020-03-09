@@ -12,40 +12,36 @@ Implementation was done using microservice architecture using Python programming
 
 ### Prerequisites
 
-In order to run GOEASY platform, you need to have the modules listed in `requirements.txt` installed or pull the docker image from dockerHub.
-
-```
-Give examples
-```
+In order to run GOEASY platform, you need to have the modules listed in [`requirements.txt`](https://github.com/sisayie/goeasy-platform/blob/master/application/requirements.txt) installed or build docker image or simply pull the docker image from dockerHub.
 
 ### Installing
 
 ### Building Image using Docker
-GOEASY Platform is very easy to install and deploy in a Docker container.
+GOEASY Platform is easy to install and deploy in a Docker container. By default, the Docker will expose port 5003, so change this within the docker-compose if necessary. When ready, simply use the docker-compose to build the image.
 
-By default, the Docker will expose port 5003, so change this within the docker-compose if necessary. When ready, simply use the docker-compose to build the image.
-
-```sh
-cd goeasy-platfomrm
+```
+cd goeasy-platform
 docker-compose up --build
 ```
 This will create the goeasy-platform image and pull in the necessary dependencies. 
 
 Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 5003 of the host to port 5003 of the Docker (or whatever port was exposed in the Dockerfile):
 
-```sh
+```
 docker run -d -p 5003:5003 --restart="always" goeasy/gep_anonengine
 ```
 
 Verify the deployment by navigating to your server address in your preferred browser.
 
-```sh
+```
 127.0.0.1:5003
 ```
 
+### Pulling Image from Docker Registry
+
 You can also directly pull (and run) goeasy-platform from image registry using 
 
-```sh
+```
 docker pull goeasy/gep_web:latest && docker pull goeasy/gep_anonengine:latest
 ```
 
@@ -53,13 +49,13 @@ docker pull goeasy/gep_web:latest && docker pull goeasy/gep_anonengine:latest
 
 You can run CRUD operations on the database as follows:
 
-####GET:
+#### GET:
 
 ```
 curl -X GET "https://localhost:5003/gep/publicstorage" -H "accept: application/json"
 ```
 
-####POST:
+#### POST:
 curl -X POST "https://localhost:5003/gep/publicstorage" -H "accept: application/json" -H "Content-Type: application/json" -d '
      ```{
         "deviceId": 123445,
@@ -113,6 +109,14 @@ See the list of [contributors](https://github.com/sisayie/goeasy-platform/graphs
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-## Project Website
+## More on the GOEASY Project
+
+### Project Website
 
 https://goeasyproject.eu/
+
+### Project Youtube Channel
+https://www.youtube.com/channel/UCZHD8RBdWRYcEYckCx7mVBw
+
+### Project LinkedIn Page
+https://www.linkedin.com/company/goeasyproject/
