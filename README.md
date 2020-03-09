@@ -107,7 +107,7 @@ See the list of [contributors](https://github.com/sisayie/goeasy-platform/graphs
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
 ## More on the GOEASY Project
 
