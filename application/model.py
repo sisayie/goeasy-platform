@@ -38,7 +38,7 @@ class Journey(db.Model):
     __tablename__ = 'journey'
     id = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer)
-    sessionId = db.Column(db.Integer)
+    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
     sourceApp = db.String(20)
     #common = db.Column(db.String(40))
     #positions = db.Column(db.String(10))
@@ -48,10 +48,10 @@ class Journey(db.Model):
     
     positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     
-    def __init__(self, deviceId, sessionId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, positions = None):
+    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, positions = None):
         #self.id = id
         self.deviceId = deviceId
-        self.sessionId = sessionId
+        self.journeyId = journeyId #self.sessionId = sessionId
         self.sourceApp = sourceApp
         if positions is None:
             positions = []
@@ -73,7 +73,7 @@ class PositionSchema(ma.ModelSchema):
 
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
-    sessionId = fields.String()
+    journeyId = fields.String() #sessionId = fields.String()
     
     positions = fields.List(fields.Nested(PositionSchema))
     

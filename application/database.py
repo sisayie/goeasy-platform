@@ -40,7 +40,7 @@ def fetch_one(id):
         return response
 
     deviceId = db.Column(db.Integer)
-    sessionId = db.Column(db.Integer)
+    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
     sourceApp = db.String(20)
     
 def add_new(): #TODO: Sanitize other conditions
@@ -62,7 +62,7 @@ def add_new(): #TODO: Sanitize other conditions
                                               authenticity = element['authenticity']))
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
-                                sessionId = anon_journey['sessionId'],
+                                journeyId = anon_journey['journeyId'], #sessionId = anon_journey['sessionId'],
                                 sourceApp = anon_journey['sourceApp'],
                                 #positions = anon_journey['positions'], 
                                 positions = new_positions,

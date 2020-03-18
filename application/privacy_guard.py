@@ -11,4 +11,3 @@ def anonymize(adict, k, v):
         elif type(adict[key]) is dict:
             anonymize(adict[key], k, v)
     return adict
-
