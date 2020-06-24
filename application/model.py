@@ -45,9 +45,9 @@ class Position(db.Model):
  
 class Journey(db.Model):
     __tablename__ = 'journey'
-    id = db.Column(db.Integer, primary_key=True)
+    #id = db.Column(db.Integer, primary_key=True)
     deviceId = db.Column(db.Integer)
-    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
+    journeyId = db.Column(db.String(40), primary_key=True) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
     sourceApp = db.String(20)
     #common = db.Column(db.String(40))
     #positions = db.Column(db.String(10))
