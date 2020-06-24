@@ -33,7 +33,7 @@ class Position(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow) # , onupdate=datetime.utcnow
     authenticity = db.Column(db.Integer)
     
-    journey_id = db.Column(db.Integer, db.ForeignKey("journey.journeyId"))
+    journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
     
     def __init__(self, lat, lon, timestamp, authenticity):
         self.id = id
