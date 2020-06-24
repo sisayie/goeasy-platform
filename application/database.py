@@ -68,11 +68,20 @@ def add_new(): #TODO: Sanitize other conditions
                                 positions = new_positions,
                                 t_behaviour = anon_journey['t_behaviour'], 
                                 a_behaviour = anon_journey['a_behaviour'], 
-                                u_behaviour=anon_journey['u_behaviour']
+                                u_behaviour = anon_journey['u_behaviour'],
+                                tpmmd=1
                                 )
             #new_journey = Journey(common = data['common'], positions = data['positions'], t_behaviour = data['t_behaviour'], a_behaviour = data['a_behaviour'], u_behaviour=data['u_behaviour'])
 
             db.session.add(new_journey)
+
+            new_jsonmsg = JSONmsg(
+                                journeyId = anon_journey['journeyId'],
+                                json = data
+            )
+
+            db.session.add(new_jsonmsg)
+
             db.session.commit()
         else:
             response = {"status": "Error",

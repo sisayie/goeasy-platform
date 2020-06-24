@@ -16,6 +16,15 @@ from collections import OrderedDict #TODO: TEST
 
 #Model
 #==========================================
+class JSONmsg(db.Model):
+    __tablename__ = "jsonmsg"
+    journeyId = db.Column(db.String(40), primary_key = True)
+    json = db.Column(db.String(4000))
+    def __init__(self, journeyId, json):
+        self.journeyId = journeyId
+        self.json = str(json)
+
+#==========================================
 class Position(db.Model):
     __tablename__ = "position"
     id = db.Column(db.Integer, primary_key = True)
@@ -42,13 +51,14 @@ class Journey(db.Model):
     sourceApp = db.String(20)
     #common = db.Column(db.String(40))
     #positions = db.Column(db.String(10))
-    t_behaviour = db.Column(db.String(10)) # tpv_defined_behaviour
-    a_behaviour = db.Column(db.String(10)) # app_defined_behaviour
-    u_behaviour = db.Column(db.String(10))  # user_defined_behaviour
-    
+    t_behaviour = db.Column(db.String(500)) # tpv_defined_behaviour
+    a_behaviour = db.Column(db.String(500)) # app_defined_behaviour
+    u_behaviour = db.Column(db.String(500))  # user_defined_behaviour
+    tpmmd = db.Column(db.Integer) # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
+
     positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     
-    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, positions = None):
+    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, tpmmd=1, positions = None):
         #self.id = id
         self.deviceId = deviceId
         self.journeyId = journeyId #self.sessionId = sessionId
@@ -56,9 +66,16 @@ class Journey(db.Model):
         if positions is None:
             positions = []
         self.positions = positions #An address object
-        self.t_behaviour = t_behaviour
-        self.a_behaviour = a_behaviour
-        self.u_behaviour = u_behaviour
+        self.t_behaviour = str(t_behaviour)
+        self.a_behaviour = str(a_behaviour)
+        self.u_behaviour = str(u_behaviour)
+        self.tpmmd = tpmmd
+#==========================================
+
+class JSONmsgSchema(ma.ModelSchema):
+    journeyId = fields.String()
+    json = fields.String()
+    
 
 class PositionSchema(ma.ModelSchema):
     lat = fields.Float()
@@ -81,6 +98,8 @@ class JourneySchema(ma.ModelSchema):
     a_behaviour = fields.String()
     u_behaviour = fields.String()
     
+    tpmmd = fields.Integer()
+    
     #fields = ("deviceId", "sessionId", "sourceApp", "positions", "a_behaviour", "t_behaviour", "u_behaviour")
     #ordered = True #present result in the oder given in fields tuple
     
@@ -91,6 +110,11 @@ class JourneySchema(ma.ModelSchema):
         #fields = ("deviceId", "sessionId", "sourceApp", "positions") #TODO: TEST
         #ordered = True #TODO: TEST
         
+
+jsonmsg_schema = JSONmsgSchema()
+jsonmsgs_schema = JSONmsgSchema(many=True)
+
+#=============================================
 
 journey_schema = JourneySchema()
 journeys_schema = JourneySchema(many=True)
