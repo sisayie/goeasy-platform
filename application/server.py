@@ -42,6 +42,11 @@ class Publicstorage(Resource):
         response = delete_one(id)
         return response
 
+@ns.route("/publicstorage/mobilityRequest/<int:id>")
+class Publicstorage(Resource):
+    def get(self, id):
+        data = fetch_one(id)
+        return (data)
 
 if __name__ == '__main__':
     db.drop_all()
