@@ -43,7 +43,7 @@ class Publicstorage(Resource):
         return response
 
 @ns.route("/publicstorage/mobilityRequest/<int:id>")
-class Publicstorage(Resource):
+class MobilityRequest(Resource):
     def get(self, id):
         data = fetch_one(id)
         return (data)
