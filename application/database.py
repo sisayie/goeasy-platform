@@ -47,7 +47,8 @@ def fetch_MM(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
 
     if journey is not None:
-        mobilityMode = journey_schema.jsonify(journey)["t_behaviour"]
+        mobilityMode = journey.loads().get("t_behaviour")
+        return journey_schema.jsonify(mobilityMode)
     else:
         response = {"status": "Error",
                     "message": "Journey does not exist"
