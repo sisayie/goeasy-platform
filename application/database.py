@@ -29,7 +29,7 @@ def fetch_all():
         return response
         
 def fetch_one(id):
-    journey = Journey.query.filter_by(id=id).first()
+    journey = Journey.query.filter_by(journeyId =id).first()
 
     if journey is not None:
         return journey_schema.jsonify(journey)
@@ -96,7 +96,7 @@ def add_new(): #TODO: Sanitize other conditions
 def update_one(id):
     new_behaviour = request.json["t_behaviour"]
     if new_behaviour is not None:
-        journey = Journey.query.filter_by(id=id).first()
+        journey = Journey.query.filter_by(journeyId =id).first()
         if journey is not None:
             journey.t_behaviour = new_behaviour
             response = {"status": "Success",
@@ -115,7 +115,7 @@ def update_one(id):
 
     
 def delete_one(id):
-    del_journey = Journey.query.filter_by(id=id).first() 
+    del_journey = Journey.query.filter_by(journeyId=id).first() 
     if del_journey is not None:
         db.session.delete(del_journey)
         db.session.commit()
