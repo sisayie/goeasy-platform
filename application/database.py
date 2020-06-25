@@ -84,6 +84,9 @@ def add_new(): #TODO: Sanitize other conditions
                                 t_behaviour = anon_journey['t_behaviour'], 
                                 a_behaviour = anon_journey['a_behaviour'], 
                                 u_behaviour = anon_journey['u_behaviour'],
+                                tpv_defined_behaviour = anon_journey['tpv_defined_behaviour'],
+                                app_defined_behaviour = anon_journey['app_defined_behaviour'],
+                                user_defined_behaviour = anon_journey['user_defined_behaviour'],
                                 tpmmd=1
                                 )
             #new_journey = Journey(common = data['common'], positions = data['positions'], t_behaviour = data['t_behaviour'], a_behaviour = data['a_behaviour'], u_behaviour=data['u_behaviour'])
