@@ -42,6 +42,21 @@ def fetch_one(id):
     deviceId = db.Column(db.Integer)
     journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
     sourceApp = db.String(20)
+
+def fetch_MM(id):
+    journey = Journey.query.filter_by(journeyId =str(id)).first()
+
+    if journey is not None:
+        return journey_schema.jsonify(journey_schema.jsonify(journey["t_behaviour"]))
+    else:
+        response = {"status": "Error",
+                    "message": "Journey does not exist"
+                    }
+        return response
+
+    deviceId = db.Column(db.Integer)
+    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
+    sourceApp = db.String(20)
     
 def add_new(): #TODO: Sanitize other conditions
     data = request.get_json()
