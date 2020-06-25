@@ -12,6 +12,7 @@ from privacy_guard import anonymize, rangen
 from model import *
 
 from marshmallow import Schema, fields, pprint
+import json
 
 #class Database:
 def fetch_all():
@@ -47,7 +48,7 @@ def fetch_MM(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
 
     if journey is not None:
-        mobilityMode = journey.loads().get("t_behaviour")
+        mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
         return journey_schema.jsonify(mobilityMode)
     else:
         response = {"status": "Error",
