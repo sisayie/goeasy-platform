@@ -36,7 +36,7 @@ class Position(db.Model):
     journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
     
     def __init__(self, lat, lon, timestamp, authenticity):
-        self.id = id
+        #self.id = id
         self.lat = lat
         self.lon = lon
         self.timestamp = timestamp
