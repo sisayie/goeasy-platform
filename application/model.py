@@ -103,6 +103,9 @@ class JourneySchema(ma.ModelSchema):
     t_behaviour = fields.String()
     a_behaviour = fields.String()
     u_behaviour = fields.String()
+    tpv_defined_behaviour = fields.String()
+    app_defined_behaviour = fields.String()
+    user_defined_behaviour = fields.String()
     
     tpmmd = fields.Integer()
     
