@@ -51,14 +51,17 @@ class Journey(db.Model):
     sourceApp = db.String(20)
     #common = db.Column(db.String(40))
     #positions = db.Column(db.String(10))
-    t_behaviour = db.Column(db.String(500)) # tpv_defined_behaviour
-    a_behaviour = db.Column(db.String(500)) # app_defined_behaviour
-    u_behaviour = db.Column(db.String(500))  # user_defined_behaviour
+    t_behaviour = db.Column(db.String(500)) 
+    tpv_defined_behaviour = db.Column(db.String(500))
+    a_behaviour = db.Column(db.String(500)) 
+    app_defined_behaviour = db.Column(db.String(500))
+    u_behaviour = db.Column(db.String(500)) 
+    user_defined_behaviour = db.Column(db.String(500))
     tpmmd = db.Column(db.Integer) # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
 
     positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     
-    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, tpmmd=1, positions = None):
+    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
         #self.id = id
         self.deviceId = deviceId
         self.journeyId = journeyId #self.sessionId = sessionId
@@ -69,6 +72,9 @@ class Journey(db.Model):
         self.t_behaviour = str(t_behaviour)
         self.a_behaviour = str(a_behaviour)
         self.u_behaviour = str(u_behaviour)
+        self.tpv_defined_behaviour = str(tpv_defined_behaviour)
+        self.app_defined_behaviour = str(app_defined_behaviour)
+        self.user_defined_behaviour = str(user_defined_behaviour)
         self.tpmmd = tpmmd
 #==========================================
 
