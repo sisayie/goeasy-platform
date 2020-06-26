@@ -19,7 +19,7 @@ from collections import OrderedDict #TODO: TEST
 class JSONmsg(db.Model):
     __tablename__ = "jsonmsg"
     journeyId = db.Column(db.String(40), primary_key = True)
-    json = db.Column(db.String(4000))
+    json = db.Column(db.String(50000))
     def __init__(self, journeyId, json):
         self.journeyId = journeyId
         self.json = str(json)
