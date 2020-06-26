@@ -48,7 +48,8 @@ def fetch_MM(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
 
     if journey is not None:
-        mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
+        #mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
+        mobilityMode = journey.tpv_defined_behaviour
         return journey_schema.jsonify(mobilityMode)
     else:
         response = {"status": "Error",
