@@ -45,7 +45,7 @@ class Publicstorage(Resource):
 @ns.route("/publicstorage/mobilityRequest/<int:id>")
 class MobilityRequest(Resource):
     def get(self, id):
-        data = fetch_MM(str(id))
+        data = fetch_MM(id)
         return (data)
 
 if __name__ == '__main__':
