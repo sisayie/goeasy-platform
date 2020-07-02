@@ -26,9 +26,9 @@ class Publicstorage(Resource):
         response = add_new()
         return response
 
-#@api.route("/publicstorage/<int:id>")
-@ns.route("/publicstorage/<int:id>")
-@ns.route("/anonimizer/<int:id>")
+#@api.route("/publicstorage/<string:id>")
+@ns.route("/publicstorage/<string:id>")
+@ns.route("/anonimizer/<string:id>")
 class Publicstorage(Resource):
     def get(self, id):
         data = fetch_one(id)
@@ -42,7 +42,7 @@ class Publicstorage(Resource):
         response = delete_one(id)
         return response
 
-@ns.route("/publicstorage/mobilityRequest/<int:id>")
+@ns.route("/publicstorage/mobilityRequest/<string:id>")
 class MobilityRequest(Resource):
     def get(self, id):
         data = fetch_MM(id)

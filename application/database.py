@@ -30,7 +30,7 @@ def fetch_all():
         return response
         
 def fetch_one(id):
-    journey = Journey.query.filter_by(journeyId = '"'+id+'"').first()
+    journey = Journey.query.filter_by(journeyId = id).first()
 
     if journey is not None:
         return journey_schema.jsonify(journey)
@@ -45,7 +45,7 @@ def fetch_one(id):
     sourceApp = db.String(20)
 
 def fetch_MM(id):
-    journey = Journey.query.filter_by(journeyId = '"'+id+'"').first()
+    journey = Journey.query.filter_by(journeyId = id).first()
 
     if journey is not None:
         #mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
@@ -118,7 +118,7 @@ def add_new(): #TODO: Sanitize other conditions
 def update_one(id):
     new_behaviour = request.json["t_behaviour"]
     if new_behaviour is not None:
-        journey = Journey.query.filter_by(journeyId = '"'+id+'"').first()
+        journey = Journey.query.filter_by(journeyId = id).first()
         if journey is not None:
             journey.t_behaviour = new_behaviour
             response = {"status": "Success",
