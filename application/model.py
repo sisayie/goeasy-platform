@@ -42,6 +42,21 @@ class Position(db.Model):
         self.timestamp = timestamp
         self.authenticity = authenticity
 #==========================================
+class EncryptedStorage(db.Model):
+    __tablename__ = "encstorage"
+    id = db.Column(db.Integer, primary_key = True)
+    tpmmd_request_key = db.Column(db.String(40))
+    sensorData = db.Column(db.String(50000))
+    payload = db.Column(db.String(50000))
+    
+    journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
+    
+    def __init__(self, tpmmd_request_key, sensorData, payload):
+        #self.id = id
+        self.tpmmd_request_key = tpmmd_request_key
+        self.sensorData = sensorData
+        self.payload = payload
+#==========================================
  
 class Journey(db.Model):
     __tablename__ = 'journey'
@@ -82,6 +97,11 @@ class JSONmsgSchema(ma.ModelSchema):
     journeyId = fields.String()
     json = fields.String()
     
+class EncreptedStorageSchema(ma.ModelSchema):
+    journeyId = fields.String()
+    tpmmd_request_key = fields.String()
+    sensorData = fields.String()
+    payload = fields.String()
 
 class PositionSchema(ma.ModelSchema):
     lat = fields.Float()
@@ -92,7 +112,6 @@ class PositionSchema(ma.ModelSchema):
     """class Meta:
         model = Position
         db_session = db.session"""
-
 
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
