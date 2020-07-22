@@ -14,6 +14,10 @@ from model import *
 from marshmallow import Schema, fields, pprint
 import json
 
+from tpmmd import *
+
+#logger = logging.getLogger(__file__)
+
 #class Database:
 def fetch_all():
     data = Journey.query.all()
@@ -30,7 +34,7 @@ def fetch_all():
         return response
         
 def fetch_one(id):
-    journey = Journey.query.filter_by(journeyId = id).first()
+    journey = Journey.query.filter_by(journeyId =str(id)).first()
 
     if journey is not None:
         return journey_schema.jsonify(journey)
@@ -40,31 +44,49 @@ def fetch_one(id):
                     }
         return response
 
-    deviceId = db.Column(db.Integer)
-    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
-    sourceApp = db.String(20)
+    #deviceId = db.Column(db.Integer)
+    #journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
+    #sourceApp = db.String(20)
 
 def fetch_MM(id):
-    journey = Journey.query.filter_by(journeyId = id).first()
+    print( " fetch_MM for journeyId:" + id)
+    journey = Journey.query.filter_by(journeyId=str(id)).first()
+    print( "journey extracted from the DB: " + str(journey))
 
     if journey is not None:
-        #mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
-        mobilityMode = journey.tpv_defined_behaviour
-        print(mobilityMode)
-        return journey_schema.jsonify(mobilityMode)
+        tpmmd = journey.tpmmd  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
+        if tpmmd > 0:
+            # not jet done or error 
+            print( "journey is done !!!")
+            response = {"status":  tpmmd,
+                        "message": "Result not available or error"
+                    }
+            return response
+        else:    
+            #mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
+            mobilityMode = journey.tpv_defined_behaviour
+            #print("Mobility Mode\n")	    
+            #print(mobilityMode)
+            response = "{ 'tpv_defined' : " + mobilityMode + "}"
+            print("response:" + str(response))
+            return jsonify(response)
+            #return journey_schema.jsonify(json.loads(response))
+            #return response
     else:
+        print( "journey is None !!!")
         response = {"status": "Error",
                     "message": "Journey does not exist"
                     }
         return response
 
-    deviceId = db.Column(db.Integer)
-    journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
-    sourceApp = db.String(20)
+    #deviceId = db.Column(db.Integer)
+    #journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
+    #sourceApp = db.String(20)
     
 def add_new(): #TODO: Sanitize other conditions
     data = request.get_json()
     if data is not None:
+        
         if data['positions']:
             response = {"status": "Success",
                         "message": "New journey registered"
@@ -85,9 +107,9 @@ def add_new(): #TODO: Sanitize other conditions
                                 sourceApp = anon_journey['sourceApp'],
                                 #positions = anon_journey['positions'], 
                                 positions = new_positions,
-                                ##t_behaviour = anon_journey['t_behaviour'], 
-                                ##a_behaviour = anon_journey['a_behaviour'], 
-                                ##u_behaviour = anon_journey['u_behaviour'],
+                                t_behaviour = anon_journey['t_behaviour'], 
+                                a_behaviour = anon_journey['a_behaviour'], 
+                                u_behaviour = anon_journey['u_behaviour'],
                                 tpv_defined_behaviour = anon_journey['tpv_defined_behaviour'],
                                 app_defined_behaviour = anon_journey['app_defined_behaviour'],
                                 user_defined_behaviour = anon_journey['user_defined_behaviour'],
@@ -105,6 +127,7 @@ def add_new(): #TODO: Sanitize other conditions
             db.session.add(new_jsonmsg)
 
             db.session.commit()
+            sendQueue.put(data)
         else:
             response = {"status": "Error",
                         "message": "Bad request body"
@@ -115,10 +138,50 @@ def add_new(): #TODO: Sanitize other conditions
                     }    
     return response
     
+def update_tpv_behaviour(id, new_behaviour):
+    if new_behaviour is not None:
+        journey = Journey.query.filter_by(journeyId =str(id)).first()
+        if journey is not None:
+            journey.tpv_defined_behaviour = str(new_behaviour)
+            journey.tpmmd = 0  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
+            response = {"status": "Success",
+                        "message": "Journey updated successfully"
+                        }    
+            db.session.commit()
+        else:
+            response = {"status": "Error",
+                        "message": "Journey does not exist"
+                        }
+    else:
+        response = {"status": "Error",
+                    "message": "Bad request body"
+                    }
+    return response
+
+
+def update_tpmmd(id, value=1):
+    if value >= 0:
+        journey = Journey.query.filter_by(journeyId =str(id)).first()
+        if journey is not None:
+            journey.tpmmd = value
+            response = {"status": "Success",
+                        "message": "tpmmd updated successfully"
+                        }    
+            db.session.commit()
+        else:
+            response = {"status": "Error",
+                        "message": "Journey does not exist"
+                        }
+    else:
+        response = {"status": "Error",
+                    "message": "Bad tpmmd value"
+                    }
+    return response
+
 def update_one(id):
     new_behaviour = request.json["t_behaviour"]
     if new_behaviour is not None:
-        journey = Journey.query.filter_by(journeyId = id).first()
+        journey = Journey.query.filter_by(journeyId =str(id)).first()
         if journey is not None:
             journey.t_behaviour = new_behaviour
             response = {"status": "Success",
@@ -137,7 +200,7 @@ def update_one(id):
 
     
 def delete_one(id):
-    del_journey = Journey.query.filter_by(journeyId = '"'+id+'"').first() 
+    del_journey = Journey.query.filter_by(journeyId=str(id)).first() 
     if del_journey is not None:
         db.session.delete(del_journey)
         db.session.commit()

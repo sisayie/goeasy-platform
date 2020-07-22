@@ -19,7 +19,7 @@ from collections import OrderedDict #TODO: TEST
 class JSONmsg(db.Model):
     __tablename__ = "jsonmsg"
     journeyId = db.Column(db.String(40), primary_key = True)
-    json = db.Column(db.String(500000))
+    json = db.Column(db.String(50000))
     def __init__(self, journeyId, json):
         self.journeyId = journeyId
         self.json = str(json)
@@ -42,21 +42,6 @@ class Position(db.Model):
         self.timestamp = timestamp
         self.authenticity = authenticity
 #==========================================
-class EncryptedStorage(db.Model):
-    __tablename__ = "encstorage"
-    id = db.Column(db.Integer, primary_key = True)
-    tpmmd_request_key = db.Column(db.String(40))
-    sensorData = db.Column(db.String(50000))
-    payload = db.Column(db.String(50000))
-    
-    journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
-    
-    def __init__(self, tpmmd_request_key, sensorData, payload):
-        #self.id = id
-        self.tpmmd_request_key = tpmmd_request_key
-        self.sensorData = sensorData
-        self.payload = payload
-#==========================================
  
 class Journey(db.Model):
     __tablename__ = 'journey'
@@ -66,17 +51,17 @@ class Journey(db.Model):
     sourceApp = db.String(20)
     #common = db.Column(db.String(40))
     #positions = db.Column(db.String(10))
-    ##t_behaviour = db.Column(db.String(500)) 
-    tpv_defined_behaviour = db.Column(db.String(5000))
-    ##a_behaviour = db.Column(db.String(500)) 
-    app_defined_behaviour = db.Column(db.String(5000))
-    ##u_behaviour = db.Column(db.String(500)) 
-    user_defined_behaviour = db.Column(db.String(5000))
+    t_behaviour = db.Column(db.String(500)) 
+    tpv_defined_behaviour = db.Column(db.String(50000))
+    a_behaviour = db.Column(db.String(500)) 
+    app_defined_behaviour = db.Column(db.String(50000))
+    u_behaviour = db.Column(db.String(500)) 
+    user_defined_behaviour = db.Column(db.String(50000))
     tpmmd = db.Column(db.Integer) # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
 
     positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     
-    def __init__(self, deviceId, journeyId, sourceApp, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
+    def __init__(self, deviceId, journeyId, sourceApp,  t_behaviour, a_behaviour, u_behaviour, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
         #self.id = id
         self.deviceId = deviceId
         self.journeyId = journeyId #self.sessionId = sessionId
@@ -84,9 +69,9 @@ class Journey(db.Model):
         if positions is None:
             positions = []
         self.positions = positions #An address object
-        #self.t_behaviour = str(t_behaviour)
-        #self.a_behaviour = str(a_behaviour)
-        #self.u_behaviour = str(u_behaviour)
+        self.t_behaviour = str(t_behaviour)
+        self.a_behaviour = str(a_behaviour)
+        self.u_behaviour = str(u_behaviour)
         self.tpv_defined_behaviour = str(tpv_defined_behaviour)
         self.app_defined_behaviour = str(app_defined_behaviour)
         self.user_defined_behaviour = str(user_defined_behaviour)
@@ -97,11 +82,6 @@ class JSONmsgSchema(ma.ModelSchema):
     journeyId = fields.String()
     json = fields.String()
     
-class EncreptedStorageSchema(ma.ModelSchema):
-    journeyId = fields.String()
-    tpmmd_request_key = fields.String()
-    sensorData = fields.String()
-    payload = fields.String()
 
 class PositionSchema(ma.ModelSchema):
     lat = fields.Float()
@@ -113,15 +93,16 @@ class PositionSchema(ma.ModelSchema):
         model = Position
         db_session = db.session"""
 
+
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
     journeyId = fields.String() #sessionId = fields.String()
     
     positions = fields.List(fields.Nested(PositionSchema))
     
-    #t_behaviour = fields.String()
-    #a_behaviour = fields.String()
-    #u_behaviour = fields.String()
+    t_behaviour = fields.String()
+    a_behaviour = fields.String()
+    u_behaviour = fields.String()
     tpv_defined_behaviour = fields.String()
     app_defined_behaviour = fields.String()
     user_defined_behaviour = fields.String()

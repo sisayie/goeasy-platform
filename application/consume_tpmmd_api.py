@@ -20,6 +20,11 @@
 
 ############  1 #########################33
 import requests
+from config import *
+
+
+logger = logging.getLogger(__file__)
+
 def getJourney(journeyId):
     url = 'https://galileocloud.goeasyproject.eu/GEP/paib/publicstorage/'+journeyId
     headers = {"Accept": "application/json"}
@@ -34,22 +39,40 @@ def getJourney(journeyId):
     '''
 
 ############  2  ################################################################
-import requests
+
 
 def postJourneyTP(journey):
-    url = 'http://172.19.0.6/route'
+    from database import update_tpmmd
+    #url = 'http://172.19.0.6/route'
+    url = 'https://galileocloud.goeasyproject.eu/LBS/route'
+    # url = 'http://galileocloud.goeasyproject.eu:8222/route'
     headers = {"Accept": "application/json"}
     # call get service with headers and params
-    response = requests.post(url,data = journey, headers=headers)
+    logger.debug("This is the data posted:\n" + json.dumps( journey, sort_keys=True, indent=4) )
+    response = requests.post(url,json= journey, headers=headers)
+    logger.debug(f'POST request to TP, response.status_code: {response.status_code}')
+    logger.debug(f'POST request to TP, response.text: {response.text}')
+    update_tpmmd(journey['journey_id'], 2)  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
+    #logger.debug(f'POST request to TP, response.content: {response.content}')
     # respons OK, update tpmmd in db
 	
 ############### 3 ################3
-import requests
+
+
 def getTPMM(journeyId):
+    from database import update_tpv_behaviour
     url = 'https://galileocloud.goeasyproject.eu/LBS/route/'+journeyId
     headers = {"Accept": "application/json"}
     # call get service with headers and params
     response = requests.get(url, headers=headers)
+    logger.debug(f'GET request to TP, response.status_code: {response.status_code}')
+    logger.debug(f'GET request to TP, response.text: {response.text}')
+    if (response.status_code == requests.codes.ok):
+        data = json.loads(response.content)
+        update_tpv_behaviour(journeyId, data)
+        logger.debug("GET request to TP, json.loads(response.content):" + str(data))
+        logger.debug("GET request to TP, response.content:" + str(response.content))
+
 
 '''def getBatchTPMMD():
     get all journeys with tpmmd ==2 (journeys that are sent but do not have tpmm)

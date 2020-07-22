@@ -17,6 +17,11 @@ from marshmallow import Schema, fields, pprint
 
 import json
 
+import logging
+
+logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s: %(message)s', level=logging.DEBUG)
+
+
 user = os.environ['POSTGRES_USER']
 pwd = os.environ['POSTGRES_PASSWORD']
 db = os.environ['POSTGRES_DB']

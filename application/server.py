@@ -10,6 +10,8 @@ from database import *
 from config import *
 from model import Journey
 
+logger = logging.getLogger(__file__)
+
 #@api.route("/publicstorage/")
 @ns.route("/publicstorage")
 @ns.route("/anonimizer")
@@ -26,9 +28,9 @@ class Publicstorage(Resource):
         response = add_new()
         return response
 
-#@api.route("/publicstorage/<string:id>")
+#@api.route("/publicstorage/<int:id>")
 @ns.route("/publicstorage/<string:id>")
-@ns.route("/anonimizer/<string:id>")
+@ns.route("/anonimizer/<int:id>")
 class Publicstorage(Resource):
     def get(self, id):
         data = fetch_one(id)
@@ -45,10 +47,15 @@ class Publicstorage(Resource):
 @ns.route("/publicstorage/mobilityRequest/<string:id>")
 class MobilityRequest(Resource):
     def get(self, id):
-        data = fetch_MM(id)
+        data = fetch_MM(str(id))
+        print("MobilityRequest data: " + str(data))
         return (data)
 
 if __name__ == '__main__':
     db.drop_all()
     db.create_all()
+    logger.debug("Starting TPMMD threads !!!!")
+    startTPMMD()
+    logger.debug("This is just befor running app.run() !!!!")
     app.run(host='0.0.0.0', port=5003, debug=True)
+
