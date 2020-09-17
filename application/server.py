@@ -52,8 +52,6 @@ class MobilityRequest(Resource):
         return (data)
 
 if __name__ == '__main__':
-    db.drop_all()
-    db.create_all()
     logger.debug("Starting TPMMD threads !!!!")
     startTPMMD()
     logger.debug("This is just befor running app.run() !!!!")
