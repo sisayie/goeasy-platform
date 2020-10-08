@@ -13,6 +13,8 @@ from marshmallow import fields
 
 from collections import OrderedDict #TODO: TEST
 
+import json
+
 
 #Model
 #==========================================
