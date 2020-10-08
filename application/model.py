@@ -74,8 +74,7 @@ class Journey(db.Model):
         #self.u_behaviour = str(u_behaviour)
         self.tpv_defined_behaviour = json.dumps(tpv_defined_behaviour)
         self.app_defined_behaviour = json.dumps(app_defined_behaviour)
-        #self.user_defined_behaviour = str(user_defined_behaviour)
-	self.user_defined_behaviour = json.dumps(user_defined_behaviour)
+        self.user_defined_behaviour = json.dumps(user_defined_behaviour)
         self.tpmmd = tpmmd
 #==========================================
 
