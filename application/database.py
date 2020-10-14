@@ -44,9 +44,17 @@ def fetch_one(id):
                     }
         return response
 
-    #deviceId = db.Column(db.Integer)
-    #journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
-    #sourceApp = db.String(20)
+def fetch_position(id):
+    positions = Position.query.filter_by(journey_id =str(id)).first()
+    print(positions)
+    if positions is not None:
+        return position_schema.jsonify(positions)
+    else:
+        response = {"status": "Error",
+                    "message": "Journey does not exist"
+                    }
+        return response
+
 
 def fetch_MM(id):
     print( " fetch_MM for journeyId:" + id)

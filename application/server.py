@@ -9,6 +9,7 @@ Created on Tue Sep 10 13:37:10 2019
 from database import *
 from config import *
 from model import Journey
+from dashboard import *
 
 logger = logging.getLogger(__file__)
 
@@ -50,6 +51,29 @@ class MobilityRequest(Resource):
         data = fetch_MM(str(id))
         print("MobilityRequest data: " + str(data))
         return (data)
+
+#====== dashboard APIs =================
+#@ns.route("/dash", methods=["get"])
+
+@ns.route("/dash/journeys/<string:id>", methods=["get"])
+class Route(Resource):
+    def get(self, id):
+        return getJourney(id)
+
+@ns.route("/dash/positions/<string:id>", methods=["get"])
+class Positions(Resource):
+    def get(self, id):
+        journey = getJourney(id)
+        return getPositions(journey)
+
+@ns.route("/dash/map/<string:id>", methods = ["get"])
+class Map(Resource):
+    def get(self, id):
+        #TODO: show for multiple journeys
+        '''for j in journey_ids:
+            display(mapping(getPositions(getJourney(j))))'''
+        return mapping(getPositions(getJourney(id)))
+#================================================
 
 if __name__ == '__main__':
     logger.debug("Starting TPMMD threads !!!!")
