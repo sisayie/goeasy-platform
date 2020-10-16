@@ -55,16 +55,21 @@ class MobilityRequest(Resource):
 #====== dashboard APIs =================
 #@ns.route("/dash", methods=["get"])
 
-@ns.route("/dash/journeys/<string:id>", methods=["get"])
+@ns.route("/dash/journey/<string:id>", methods=["get"])
 class Route(Resource):
     def get(self, id):
-        return getJourney(id)
+        journey = fetch_one(id)#getJourney(id)
+        return (journey)
 
 @ns.route("/dash/positions/<string:id>", methods=["get"])
 class Positions(Resource):
     def get(self, id):
-        journey = getJourney(id)
-        return getPositions(journey)
+        #journey = fetch_one(id) #getJourney(id)
+        positions = fetch_positions(id) #getPositions(journey)
+        return positions
+        #positions_dict = json.loads(positions)
+        #lat = positions['lat']
+        #return lat
 
 @ns.route("/dash/map/<string:id>", methods = ["get"])
 class Map(Resource):
@@ -72,7 +77,9 @@ class Map(Resource):
         #TODO: show for multiple journeys
         '''for j in journey_ids:
             display(mapping(getPositions(getJourney(j))))'''
-        return mapping(getPositions(getJourney(id)))
+        position = fetch_positions(id)
+        positions = getPositions(position)
+        return mapping(positions) #(getPositions(getJourney(id)))
 #================================================
 
 if __name__ == '__main__':

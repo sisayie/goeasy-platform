@@ -24,6 +24,20 @@ services:
       - .env
     volumes:
       - .:/opt/services/anonengine/src
+  dash:
+    build: ./dash
+    container_name: dash
+    restart: always
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "5004:5004"
+    env_file:
+      - .env
+    volumes:
+      - .:/opt/services/dash/src
   web:
     build: ./nginx
     container_name: web
@@ -34,5 +48,6 @@ services:
       - anonengine
     ports:
       - "8880:8880"
+      - "8888:8888"
 volumes:
   postgres:

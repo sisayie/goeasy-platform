@@ -5,6 +5,7 @@ Created on Tue Sep 10 13:37:10 2019
 @author: chala
 """
 # Database
+
 from flask import request
 
 from privacy_guard import anonymize, rangen
@@ -15,6 +16,7 @@ from marshmallow import Schema, fields, pprint
 import json
 
 from tpmmd import *
+
 
 #logger = logging.getLogger(__file__)
 
@@ -44,14 +46,17 @@ def fetch_one(id):
                     }
         return response
 
-def fetch_position(id):
-    positions = Position.query.filter_by(journey_id =str(id)).first()
-    print(positions)
+def fetch_positions(id):
+    #positions = Position.query.filter_by(journey_id =str(id)).first() # one position returned
+    #positions = Position.query.filter_by(journey_id =str(id)).all() # {} returned
+    #positions = db.session.query(Position).filter_by(Position.journey_id=str(id)).all() # {} returned
+    positions = db.session.query(Position).filter_by(journey_id=str(id)).all()
+    
     if positions is not None:
         return position_schema.jsonify(positions)
     else:
         response = {"status": "Error",
-                    "message": "Journey does not exist"
+                    "message": "Positions do not exist"
                     }
         return response
 
