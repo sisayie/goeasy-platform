@@ -73,10 +73,15 @@ def mapping(positions):
     #Set the zoom
     routes_map.fit_bounds(routes_map.get_bounds())
     
+    '''
     #routes_map.save('using_folium12.html')
     routes_map.save(outfile)
     webbrowser.open(outfile, new=2)
     #return routes_map
+    '''
+    html_string = routes_map._repr_html_()
+    return html_string
+
 
 def create_entry():
     req = request.get_json()
@@ -87,7 +92,13 @@ def create_entry():
 #==================== APIs ==========================
 @app.route('/dash')
 def index():
-    return 'GEP Dashboard'
+    #m = folium.Map()
+    #html_string = m.get_root().render()
+    #return html_string
+    COORDINATES = (43.7623939, 7.4849723)
+    myMap = folium.Map(location=COORDINATES, zoom_start=12)
+    html_string = myMap._repr_html_() #.get_root().render()
+    return html_string
 
 @app.route("/journey/<string:id>", methods=["get"])
 def get_routes(id):
@@ -136,8 +147,8 @@ def get_route(id):
     '''for j in journey_ids:
         display(mapping(getPositions(getJourney(j))))'''
     #display(mapping(getPositions(getJourney(id))))
-    mapping(getPositions(getJourney(id)))
-    return 'Ok'
+    return mapping(getPositions(getJourney(id))) #flask.render_template_string(html_string) #to feed into a template
+    #return 'Ok'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)
