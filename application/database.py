@@ -17,9 +17,6 @@ import json
 
 from tpmmd import *
 
-
-#logger = logging.getLogger(__file__)
-
 #class Database:
 def fetch_all():
     data = Journey.query.all()
@@ -69,32 +66,24 @@ def fetch_MM(id):
     if journey is not None:
         tpmmd = journey.tpmmd  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
         if tpmmd > 0:
-            # not jet done or error 
+            # not yet done or error 
             print( "journey is done !!!")
             response = {"status":  tpmmd,
                         "message": "Result not available or error"
                     }
             return response
         else:    
-            #mobilityMode = json.loads(journey).get("t_behaviour") #json.loads(json.dumps(journey)).get("t_behaviour")
             mobilityMode = journey.tpv_defined_behaviour
-            #print("Mobility Mode\n")	    
-            #print(mobilityMode)
+            
             response = "{ 'tpv_defined' : " + mobilityMode + "}"
             print("response:" + str(response))
             return jsonify(response)
-            #return journey_schema.jsonify(json.loads(response))
-            #return response
     else:
         print( "journey is None !!!")
         response = {"status": "Error",
                     "message": "Journey does not exist"
                     }
         return response
-
-    #deviceId = db.Column(db.Integer)
-    #journeyId = db.Column(db.String(40)) #sessionId = db.Column(db.Integer)
-    #sourceApp = db.String(20)
     
 def add_new(): #TODO: Sanitize other conditions
     data = request.get_json()
@@ -107,16 +96,15 @@ def add_new(): #TODO: Sanitize other conditions
             ano_id = rangen()             
             anon_journey = anonymize(data, 'deviceId',ano_id) 
       
-            #new_address = Address(telephone = data['address']['tel'], email = data['address']['email'])
             new_positions = []
             for element in anon_journey['positions']:
                 new_positions.append(Position(lat = element['lat'],
                                               lon = element['lon'],
-                                              timestamp = datetime.fromtimestamp(element['time']/1000), #https://stackoverflow.com/questions/10286224/javascript-timestamp-to-python-datetime-conversion
+                                              timestamp = datetime.fromtimestamp(element['time']/1000), 
                                               authenticity = element['authenticity']))
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
-                                journeyId = anon_journey['journeyId'], #sessionId = anon_journey['sessionId'],
+                                journeyId = anon_journey['journeyId'], 
                                 sourceApp = anon_journey['sourceApp'],
                                 startDate = datetime.fromtimestamp(anon_journey['startDate']/1000),
                                 endDate = datetime.fromtimestamp(anon_journey['endDate']/1000),
@@ -132,7 +120,6 @@ def add_new(): #TODO: Sanitize other conditions
                                 user_defined_behaviour = anon_journey['user_defined_behaviour'],
                                 tpmmd=1
                                 )
-            #new_journey = Journey(common = data['common'], positions = data['positions'], t_behaviour = data['t_behaviour'], a_behaviour = data['a_behaviour'], u_behaviour=data['u_behaviour'])
 
             db.session.add(new_journey)
 

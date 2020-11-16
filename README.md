@@ -59,12 +59,13 @@ curl -X POST "https://localhost:5003/GEP/paib/publicstorage" -H "accept: applica
         "deviceId": 123445,
         "sessionID": 456789,
         "sourceApp": "ApesMobility",  
+	"startDate": 1593634192972,
+    	"endDate": 1593679487241,
+    	"distance": 81,
+    	"elapsedTime": "443442:02:15",
+
         "positions": [
-            {"lat":43.4541819, 
-		"lon":11.8679015, 
-		"time":1570390750300, 
-		"authenticity": 1
-		},
+            {"lat":43.4541819, "lon":11.8679015, "time":1570390750300, "authenticity": 1},
             {"lat":43.4541711, "lon":11.8679564, "time":1570390752305, "authenticity": 0},
             {"lat":43.4542047, "lon":11.8679665, "time":1570390757171, "authenticity": 1},
             {"lat":43.4541974, "lon":11.8679352, "time":1570390770173, "authenticity": 1},
