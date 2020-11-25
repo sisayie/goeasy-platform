@@ -41,9 +41,9 @@ db = SQLAlchemy(app)
 
 api = Api(app=app, 
           version='1.0', 
-          title='Anonymizer Api', 
-          description='GOEASY Api for Anonymizing Journeys')
+          title='GOEASY Platform', 
+          description='GOEASY Privacy-Aware Information Base and API')
 
-ns = api.namespace('paib',description = 'GOEASY Platform Measurements for LBS')
+ns = api.namespace('paib',description = 'GOEASY Platform Measurements for Location Based Services (LBS)')
 
 ma = Marshmallow(api)

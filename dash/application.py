@@ -40,6 +40,31 @@ def getPositions(journey):
         longitude_list.append(position['lon'])
     return latitude_list, longitude_list
 
+def getStartEndPositions(journey):
+    lat_list, lon_list = getPositions(journey)
+    return lat_list[0], lon_list[0], lat_list[-1], lon_list[-1]
+    
+def getMobiltiyTypes(journey):
+    '''udb = []
+    for user_defined_behaviour in journey['user_defined_behaviour']:
+        udb.append(user_defined_behaviour)
+    return udb'''
+    
+    journey.pop('app_defined_behaviour', None)
+    journey.pop('deviceId', None)
+    journey.pop('authenticity', None)
+    journey.pop('timestamp', None)
+    journey.pop('tpmmd', None)
+    journey.pop('app_defined_behaviour', None)
+    journey.pop('tpv_defined_behaviour', None)
+    #journey.pop('user_defined_behaviour', None)
+    journey.pop('position', None)
+    for element in journey['user_defined_behaviour']:
+        json.loads(element).pop('start', None)
+        json.loads(element).pop('end', None)
+
+    return journey    
+    
 def get_route():
     #create a map
     routes_map = folium.Map(prefer_canvas=True)
@@ -149,6 +174,14 @@ def get_route(id):
     #display(mapping(getPositions(getJourney(id))))
     return mapping(getPositions(getJourney(id))) #flask.render_template_string(html_string) #to feed into a template
     #return 'Ok'
+    
+@app.route("/modes/<string:id>", methods=["get"])
+def get_s_e_position(id):
+    journey = getJourney(id)
+    start_lat, start_lon, end_lat, end_lon = getStartEndPositions(journey)
+    mobility_mode = getMobiltiyTypes(journey)
+    return jsonify(mobility_mode) #jsonify("start":{start_lat, start_lon}, "end": {end_lat, end_lon}, "mobility": mobility_mode)
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5004)
+    app.run(host='0.0.0.0', port=5004, debug=True)
