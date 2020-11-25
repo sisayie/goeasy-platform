@@ -106,8 +106,8 @@ def add_new(): #TODO: Sanitize other conditions
                                 deviceId = anon_journey['deviceId'], 
                                 journeyId = anon_journey['journeyId'], 
                                 sourceApp = anon_journey['sourceApp'],
-                                company_code = anon_journey['company_code']
-                                company_trip_type = anon_journey['company_trip_type']
+                                company_code = anon_journey['company_code'],
+                                company_trip_type = anon_journey['company_trip_type'],
                                 startDate = datetime.fromtimestamp(anon_journey['startDate']/1000),
                                 endDate = datetime.fromtimestamp(anon_journey['endDate']/1000),
                                 distance = anon_journey['distance'],
