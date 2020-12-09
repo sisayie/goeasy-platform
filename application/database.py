@@ -14,6 +14,7 @@ from sqlalchemy import func
 import json
 
 from privacy_guard import anonymize, rangen
+from utils import *
 
 from model import *
 
@@ -73,14 +74,15 @@ def fetch_time_range():
     #end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
     #end = end.strftime('%Y-%m-%dT%H:%M:%S')
     
-    
+    start = date_format(start) # Convert input date to uniform format
     start = datetime.fromtimestamp(int(start)) #Convert timestamp to datetime
-    start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
-
+    start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format that matches date stored in db
+    
+    end = date_format(end)
     end = datetime.fromtimestamp(int(end)) #Convert timestamp to datetime
-    end = end.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
+    end = end.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format that matches date stored in db
 
-    journey = Journey.query.filter(startdate >= start).all() #db.session.query(Journey).filter(
+    journey = Journey.query.filter(Journey.startdate >= start).all() #db.session.query(Journey).filter(
         
         #(func.DATE(start) <= func.DATE(Journey.startDate)) #func.DATE(datetime.strftime(datetime.strptime(str(Journey.startdate), '%Y-%m-%d %H:%M:%S.%f%z'), '%Y-%m-%dT%H:%M:%S')))
         #(func.DATE(start) <= func.DATE(Journey.startdate.strftime('%Y-%m-%dT%H:%M:%S'))) &
