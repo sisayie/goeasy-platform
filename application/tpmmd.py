@@ -33,23 +33,50 @@ async def delayedPut(journey, delay=5):
 
 def tpmmdSender():
     while True:
-        item = sendQueue.get()
-        # the item have to be customised
-        #  1. renape "positions" to "trace_information"
-        #  2. copy "user_defined_behaviour" to "behaviour"{ "user_defined": []}
-        #  3. rename "sensors" to "sensors_information"
-        #  4. rename "journeyId" to "journey_id"
-        item['trace_information']= item.pop('positions')    # 1.
-        item['sensors_information']= item.pop('sensors')    # 2.
-        item['behaviour'] = {"app_defined": [],"tpv_defined": [],'user_defined': []}    # 3.
-        item['behaviour']['user_defined'] = item['user_defined_behaviour']              # 3.
-        item['journey_id']= item.pop('journeyId')           # 4.
-        
-        item.pop('a_behaviour')
-        item.pop('u_behaviour')
-        item.pop('t_behaviour')
-        item.pop('tpv_defined_behaviour')
-        item.pop('app_defined_behaviour')
+        try:
+            item = sendQueue.get()
+            # the item have to be customised
+            #  1. renape "positions" to "trace_information"
+            #  2. copy "user_defined_behaviour" to "behaviour"{ "user_defined": []}
+            #  3. rename "sensors" to "sensors_information"
+            #  4. rename "journeyId" to "journey_id"
+            positions = item.get('positions')
+            if positions: 
+                item['trace_information'] = item.pop('positions')    # 1.
+            else: 
+                item['trace_information'] = []
+            
+            sensors = item.get('sensors')
+            if sensors:
+                item['sensors_information'] = item.pop('sensors')    # 2.
+            else:
+                item['sensors_information'] = []
+
+            item['behaviour'] = {"app_defined": [],"tpv_defined": [],'user_defined': []}    # 3.
+            
+            u_def_beh = item.get('user_defined_behaviour')
+            if u_def_beh:
+                item['behaviour']['user_defined'] = u_def_beh              # 3.
+
+            journeyId = item.get ('journeyId')
+            if journeyId:   
+                item['journey_id']= item.pop('journeyId')           # 4.
+            else:
+                item['journey_id']=""
+
+            if item.get('a_behaviour'): 
+                item.pop('a_behaviour')
+            if item.get('u_behaviour'): 
+                item.pop('u_behaviour')
+            if item.get('t_behaviour'): 
+                item.pop('t_behaviour')
+            if item.get('tpv_defined_behaviour'): 
+                item.pop('tpv_defined_behaviour')
+            
+            item.pop('app_defined_behaviour')
+
+        except KeyError:
+            logger.debug("KeyError in queued message.")
 
         logger.debug('Sending on journeyId:' + item['journey_id'])
         postJourneyTP(item)

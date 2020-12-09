@@ -48,7 +48,7 @@ class Journey(db.Model):
     __tablename__ = 'journey'
     deviceId = db.Column(db.Integer)
     journeyId = db.Column(db.String(40), primary_key=True) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
-    sourceapp = db.Column(db.String(20))
+    sourceApp = db.Column(db.String(20))
     company_code = db.Column(db.String(20))
     company_trip_type = db.Column(db.String(20))
     startdate = db.Column(db.DateTime)
@@ -68,10 +68,10 @@ class Journey(db.Model):
         self.sourceApp = sourceApp
         self.company_code = company_code
         self.company_trip_type = company_trip_type
-        self.startDate = startDate
-        self.endDate = endDate
+        self.startdate = startDate
+        self.enddate = endDate
         self.distance = distance
-        self.elapsedTime = elapsedTime
+        self.elapsedtime = elapsedTime
         if positions is None:
             positions = []
         self.positions = positions #An address object
@@ -82,7 +82,7 @@ class Journey(db.Model):
 #==========================================
 
 class JSONmsgSchema(ma.ModelSchema):
-    journeyId = fields.String()
+    journeyId = fields.String(required=True)
     json = fields.String()
     
 
@@ -94,14 +94,14 @@ class PositionSchema(ma.ModelSchema):
 
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
-    journeyId = fields.String() #sessionId = fields.String()
+    journeyId = fields.String(required=True) #sessionId = fields.String()
     sourceApp = fields.String()
     company_code = fields.String()
     company_trip_type = fields.String()
-    startDate = fields.DateTime()
-    endDate =  fields.DateTime()
+    startdate = fields.DateTime()
+    enddate =  fields.DateTime()
     distance = fields.Float(allow_none=True)
-    elapsedTime = fields.String()
+    elapsedtime = fields.String()
     
     positions = fields.List(fields.Nested(PositionSchema))
     

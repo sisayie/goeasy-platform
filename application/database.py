@@ -5,15 +5,17 @@ Created on Tue Sep 10 13:37:10 2019
 @author: chala
 """
 # Database
+import logging
+logger = logging.getLogger(__file__)
 
 from flask import request
+from marshmallow import Schema, fields, pprint
+from sqlalchemy import func
+import json
 
 from privacy_guard import anonymize, rangen
 
 from model import *
-
-from marshmallow import Schema, fields, pprint
-import json
 
 from tpmmd import *
 
@@ -42,7 +44,7 @@ def fetch_one(id):
                     "message": "Journey does not exist"
                     }
         return response
-
+        
 def fetch_positions(id):
     #positions = Position.query.filter_by(journey_id =str(id)).first() # one position returned
     #positions = Position.query.filter_by(journey_id =str(id)).all() # {} returned
@@ -57,6 +59,45 @@ def fetch_positions(id):
                     }
         return response
 
+def fetch_time_range():
+    start  = request.args.get('start_time', None)
+    end  = request.args.get('end_time', None)
+    
+    #journey = db.session.query(journey_schema).filter(
+    #    journey_schema.startDate >= start and journey_schema.endDate <=end
+    #    ).all()
+    
+    #enddate = datetime.strptime("2020-07-02T08:44:47.241000+00:00", '%Y-%m-%dT%H:%M:%S.%f%z')
+    #start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z') #Convert str to datetime
+    #start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
+    #end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
+    #end = end.strftime('%Y-%m-%dT%H:%M:%S')
+    
+    
+    start = datetime.fromtimestamp(int(start)) #Convert timestamp to datetime
+    start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
+
+    end = datetime.fromtimestamp(int(end)) #Convert timestamp to datetime
+    end = end.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
+
+    journey = Journey.query.filter(startdate >= start).all() #db.session.query(Journey).filter(
+        
+        #(func.DATE(start) <= func.DATE(Journey.startDate)) #func.DATE(datetime.strftime(datetime.strptime(str(Journey.startdate), '%Y-%m-%d %H:%M:%S.%f%z'), '%Y-%m-%dT%H:%M:%S')))
+        #(func.DATE(start) <= func.DATE(Journey.startdate.strftime('%Y-%m-%dT%H:%M:%S'))) &
+        #(func.DATE(Journey.enddate.strftime('%Y-%m-%dT%H:%M:%S')) <= func.DATE(end))
+        #(datetime.fromtimestamp(Journey.startdate/1000) >= datetime.fromtimestamp(start))).all()
+        #& (datetime.fromtimestamp(Journey.enddate/1000) >= datetime.fromtimestamp(end))
+        #(datetime.strptime(start, '%Y-%m-%dT%H:%M:%S') <= datetime.strptime(Journey.startdate,'%Y-%m-%dT%H::%M::%S.%f')) &
+        #(datetime.strptime(Journey.startdate, '%Y-%m-%dT%H::%M::%S.%f') <= datetime.strptime(end, '%Y-%m-%dT%H:%M:%S'))
+        #).all()
+    #logger.debug("Journey start date" + Journey.startdate)
+    if journey is not None:
+        return journey_schema.jsonify(journey)
+    else:
+        response = {"status": "Error",
+                    "message": "Journey does not exist"
+                    }
+        return response
 
 def fetch_MM(id):
     print( " fetch_MM for journeyId:" + id)

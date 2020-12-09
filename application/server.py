@@ -52,6 +52,12 @@ class MobilityRequest(Resource):
         print("MobilityRequest data: " + str(data))
         return (data)
 
+@ns.route("/publicstorage/journey")
+class JourneyDash(Resource):
+    def get(self):
+        data = fetch_time_range()
+        return (data)
+
 #====== dashboard APIs =================
 '''@ns.route("/dash", methods=["get"])
 class Route(Resource):
