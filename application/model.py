@@ -48,7 +48,7 @@ class Journey(db.Model):
     __tablename__ = 'journey'
     deviceId = db.Column(db.Integer)
     journeyId = db.Column(db.String(40), primary_key=True) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
-    sourceApp = db.Column(db.String(20))
+    sourceapp = db.Column(db.String(20))
     company_code = db.Column(db.String(20))
     company_trip_type = db.Column(db.String(20))
     startdate = db.Column(db.DateTime)
@@ -65,7 +65,7 @@ class Journey(db.Model):
     def __init__(self, deviceId, journeyId, sourceApp, company_code, company_trip_type, startDate, endDate, distance, elapsedTime, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
         self.deviceId = deviceId
         self.journeyId = journeyId #self.sessionId = sessionId
-        self.sourceApp = sourceApp
+        self.sourceapp = sourceApp
         self.company_code = company_code
         self.company_trip_type = company_trip_type
         self.startdate = startDate
@@ -95,7 +95,7 @@ class PositionSchema(ma.ModelSchema):
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
     journeyId = fields.String(required=True) #sessionId = fields.String()
-    sourceApp = fields.String()
+    sourceapp = fields.String()
     company_code = fields.String()
     company_trip_type = fields.String()
     startdate = fields.DateTime()
