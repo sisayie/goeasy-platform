@@ -52,12 +52,18 @@ class MobilityRequest(Resource):
         print("MobilityRequest data: " + str(data))
         return (data)
 
-@ns.route("/publicstorage/journey")
+@ns.route("/publicstorage/journey/times")
 class JourneyDash(Resource):
     def get(self):
         data = fetch_time_range()
         return (data)
 
+@ns.route("/publicstorage/journey/locations")
+class JourneyDash1(Resource):
+    def get(self):
+        data = fetch_space_range()
+        return (data)
+        
 #====== dashboard APIs =================
 '''@ns.route("/dash", methods=["get"])
 class Route(Resource):
@@ -92,8 +98,6 @@ class Map(Resource):
 #================================================
 
 if __name__ == '__main__':
-    #db.drop_all()
-    #db.create_all()
     logger.debug("Starting TPMMD threads !!!!")
     startTPMMD()
     logger.debug("This is just befor running app.run() !!!!")
