@@ -11,6 +11,7 @@ logger = logging.getLogger(__file__)
 from flask import request
 from marshmallow import Schema, fields, pprint
 from sqlalchemy import func, cast, Numeric
+from sqlalchemy.types import Float
 
 import json
 
@@ -72,19 +73,6 @@ def fetch_time_range():
     start  = request.args.get('start_time', None)
     end  = request.args.get('end_time', None)
     
-    '''result_set = db.execute("SELECT * FROM Journey")
-    for r in result_set:  
-        print(r)'''
-    #journey = db.session.query(journey_schema).filter(
-    #    journey_schema.startDate >= start and journey_schema.endDate <=end
-    #    ).all()
-    
-    #enddate = datetime.strptime("2020-07-02T08:44:47.241000+00:00", '%Y-%m-%dT%H:%M:%S.%f%z')
-    #start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%S.%f%z') #Convert str to datetime
-    #start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format
-    #end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%S.%f%z')
-    #end = end.strftime('%Y-%m-%dT%H:%M:%S')
-    
     start = date_format(start) # Convert input date to uniform format
     start = datetime.fromtimestamp(int(start)) # Convert timestamp to datetime
     start = start.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format that matches date stored in db
@@ -92,36 +80,11 @@ def fetch_time_range():
     end = date_format(end)
     end = datetime.fromtimestamp(int(end)) #Convert timestamp to datetime
     end = end.strftime('%Y-%m-%dT%H:%M:%S') # extract datetime in specific format that matches date stored in db
-    
-    #journey_attribute = getattr(Journey, 'startdate') # get attribute
-    
-    #if equals_filter:
-    #journey_filter = journey_attribute >= start # compute expression
-    
-    #else:
-    #journey_filter = journey_attribute.in_(in_list)
-    #journey = db.session.query(Journey).filter(journey_filter) # filter using expression
-    '''try:
-        journey = db.session.query(Journey).filter(Journey.sourceapp == 'ApesMobility').all() 
-    except Exception as e:
-        db.session.rollback()
-        print (str(e))'''
+
     journey = db.session.query(Journey).filter(
-        #db.session.query(Journey).filter(
-        
-        #(Journey.tpv_defined_behaviour.start.contains({'lat': the_value}))
         (func.DATE(start) <= func.DATE(Journey.startdate)) &
         (func.DATE(Journey.enddate) <= func.DATE(end))
-        #func.DATE(datetime.strftime(datetime.strptime(str(Journey.startdate), '%Y-%m-%d %H:%M:%S.%f%z'), '%Y-%m-%dT%H:%M:%S')))
-        #(func.DATE(start) <= func.DATE(Journey.startdate.strftime('%Y-%m-%dT%H:%M:%S'))) &
-        #(func.DATE(Journey.enddate.strftime('%Y-%m-%dT%H:%M:%S')) <= func.DATE(end))
-        #(datetime.fromtimestamp(Journey.startdate/1000) >= datetime.fromtimestamp(start))).all()
-        #& (datetime.fromtimestamp(Journey.enddate/1000) >= datetime.fromtimestamp(end))
-        #(datetime.strptime(start, '%Y-%m-%dT%H:%M:%S') <= datetime.strptime(Journey.startdate,'%Y-%m-%dT%H::%M::%S.%f')) &
-        #(datetime.strptime(Journey.startdate, '%Y-%m-%dT%H::%M::%S.%f') <= datetime.strptime(end, '%Y-%m-%dT%H:%M:%S'))
         ).all()
-        
-    #logger.info("Journey ==> " + str(journey))
 
     if journey is not None:
         return caseones_schema.jsonify(journey)
@@ -130,27 +93,39 @@ def fetch_time_range():
                     "message": "Journey does not exist"
                     }
         return response
+
+from sqlalchemy.sql import column
         
 def fetch_space_range():
     start_lat  = request.args.get('start_lat', None)
+    start_lat = float(start_lat)
     start_lon  = request.args.get('start_lon', None)
+    start_lon = float(start_lon)
     radius = request.args.get('radius', None)
+    radius = float(radius)
 
     logger.info("Lat ==> " + str(start_lat))   
     logger.info("Lon ==> " + str(start_lon))
     logger.info("Radius ==> " + str(radius))
+    logger.info("Lat from DB ==> " + str(Journey.tpv_defined_behaviour["start"]["lat"].astext))
+    logger.info("Lat, lon from DB ==> " + str((Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}]))))
+    logger.info("Lon from DB ==> " + str(Journey.tpv_defined_behaviour["start"]["lon"].astext.cast(Float)))
+    logger.info("Meters from DB ==> " + str(Journey.tpv_defined_behaviour["meters"].astext.cast(Float)))
     
     journey = db.session.query(Journey).filter(
-        Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}]) #&
-        #Journey.tpv_defined_behaviour["meters"].astext.cast(Numeric) <= float(radius)
-        #Journey.tpv_defined_behaviour['meters'].astext.cast(Numeric) <= float(radius)
-        #Journey.tpv_defined_behaviour[("type")].astext == "walk"
-        #Journey.tpv_defined_behaviour[('start', 'lat')].astext.cast(Numeric) == start_lat #43.760253
-        #Journey.tpv_defined_behaviour.contains([{'meters': radius}])
+        Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}])
         ).all()
-        #User.payment_info.contains({'subscriptions': [{'external_id': 'sub_3Q9Q4bP2zW'}]})
     logger.info("Journey ==> " + str(journey))
-
+    
+    for j in journey:
+        for t in j.tpv_defined_behaviour:
+            if t['meters'] > radius:
+                journey.remove(j)
+                logger.info("Journey start_lat ==> " + str(t['start']['lat']))
+                logger.info("Journey start_lon ==> " + str(t['start']['lon']))
+                logger.info("Journey start_radius ==> " + str(t['meters']) + str(type(t['meters'])))
+                logger.info("Journey start_type ==> " + str(t['type']))
+            
     if journey is not None:
         return caseones_schema.jsonify(journey)
     else:
@@ -203,17 +178,7 @@ def add_new(): #TODO: Sanitize other conditions
                                               lon = element['lon'],
                                               timestamp = datetime.fromtimestamp(element['time']/1000), 
                                               authenticity = element['authenticity']))
-                                              
-            '''new_tpv_defined_behaviour = []
-            for element in anon_journey['tpv_defined_behaviour']:
-                new_tpv_defined_behaviour.append(Behaviour(
-                                              start = element['start'],
-                                              end = element['end'],
-                                              meters = element['meters'],
-                                              #accuracy = element['accuracy'],
-                                              type = element['type'])
-                                              )
-            logger.info("new_tpv_defined_behaviour ==> " + str(new_tpv_defined_behaviour))'''                              
+                                                                            
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
                                 journeyId = anon_journey['journeyId'], 
@@ -224,9 +189,7 @@ def add_new(): #TODO: Sanitize other conditions
                                 enddate = datetime.fromtimestamp(anon_journey['endDate']/1000),
                                 distance = anon_journey['distance'],
                                 elapsedtime = anon_journey['elapsedTime'],
-                                #positions = anon_journey['positions'], 
-                                positions = new_positions,
-                                #tpv_defined_behaviour = new_tpv_defined_behaviour,
+                                positions = new_positions,   
                                 tpv_defined_behaviour = anon_journey['tpv_defined_behaviour'],
                                 app_defined_behaviour = anon_journey['app_defined_behaviour'],
                                 user_defined_behaviour = anon_journey['user_defined_behaviour'],
@@ -258,7 +221,7 @@ def update_tpv_behaviour(id, new_behaviour):
     if new_behaviour is not None:
         journey = Journey.query.filter_by(journeyId =str(id)).first()
         if journey is not None:
-            journey.tpv_defined_behaviour = str(new_behaviour)
+            journey.tpv_defined_behaviour = new_behaviour #str(new_behaviour)
             journey.tpmmd = 0  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
             response = {"status": "Success",
                         "message": "Journey updated successfully"

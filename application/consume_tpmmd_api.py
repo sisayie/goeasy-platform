@@ -69,8 +69,8 @@ def getTPMM(journeyId):
     logger.debug(f'GET request to TP, response.text: {response.text}')
     if (response.status_code == requests.codes.ok):
         data = json.loads(response.content)
-        update_tpv_behaviour(journeyId, data)
-        logger.debug("GET request to TP, json.loads(response.content):" + str(data))
+        update_tpv_behaviour(journeyId, data['tpv_defined'])
+        logger.debug("GET request to TP, json.loads(response.content):" + str(data['tpv_defined']))
         logger.debug("GET request to TP, response.content:" + str(response.content))
 
 
