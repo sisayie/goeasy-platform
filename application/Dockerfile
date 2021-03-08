@@ -8,7 +8,7 @@ COPY requirements.txt /application
 
 WORKDIR /application
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 #Should be modified at on containers up on deployment
 ENV POSTGRES_USER="postgres"

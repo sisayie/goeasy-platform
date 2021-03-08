@@ -17,7 +17,7 @@ def getJourney(journeyId):
 #==================== Fetch Positions from Journey ==========================
 def getPositions(journeyId):
     journey = getJourney(journeyId)
-    positions = journey['positions']
+    positions = journey 
     return positions
     '''latitude_list = []
     longitude_list = []

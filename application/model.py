@@ -35,7 +35,7 @@ class Position(db.Model):
     __table_args__ = {'extend_existing': True} 
     id = db.Column(db.Integer, primary_key = True)
     lat = db.Column(db.Numeric(9,7)) #precision & scale => https://www.postgresql.org/docs/9.6/datatype-numeric.html
-    lon = db.Column(db.Numeric(9,7))
+    lon = db.Column(db.Numeric(10,7))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow) # , onupdate=datetime.utcnow
     authenticity = db.Column(db.Integer)
     
@@ -160,7 +160,9 @@ class CaseOneSchema(ma.ModelSchema):
     distance = fields.Float(allow_none=True)
     elapsedtime = fields.String()
     #start_lat, start_lon, end_lat, end_lon, meters, type, accuracy
-    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) #fields.String()
+    app_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
+    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
+    user_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) #fields.String()
     tpmmd = fields.Integer()  
     
 jsonmsg_schema = JSONmsgSchema()

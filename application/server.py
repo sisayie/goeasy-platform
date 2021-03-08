@@ -10,6 +10,9 @@ from database import *
 from config import *
 from model import Journey
 from dashboard import *
+from dash_app import *
+
+#from werkzeug.wsgi import DispatcherMiddleware
 
 logger = logging.getLogger(__file__)
 
@@ -96,10 +99,19 @@ class Map(Resource):
         positions = getPositions(position)
         return mapping(positions) #(getPositions(getJourney(id)))'''
 #================================================
+'''@ns.route("/dash/time", methods = ["get"])
+class Dash(Resource):
+    def get(self):
+        app = gep_dash()
+        return app'''
 
 if __name__ == '__main__':
     logger.debug("Starting TPMMD threads !!!!")
     startTPMMD()
     logger.debug("This is just befor running app.run() !!!!")
     app.run(host='0.0.0.0', port=5003, debug=True)
+    '''dash_app = gep_dash()
+    application = DispatcherMiddleware(app, {'/dash': dash_app.server})
+    
+    run(host='0.0.0.0', port=5003, debug=True)'''
 
