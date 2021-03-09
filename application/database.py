@@ -27,9 +27,9 @@ def fetch_all():
     data = Journey.query.all()
 
     if data is not None:
-        response = {"status": "Success",
+        '''response = {"status": "Success",
                     "message": "New journey registered"
-                    }
+                    }'''
         return data
     else:
         response = {"status": "Error",
@@ -166,9 +166,6 @@ def add_new(): #TODO: Sanitize other conditions
     if data is not None:
         
         if data['positions']:
-            response = {"status": "Success",
-                        "message": "New journey registered"
-                        }
             ano_id = rangen()             
             anon_journey = anonymize(data, 'deviceId',ano_id) 
       
@@ -205,7 +202,16 @@ def add_new(): #TODO: Sanitize other conditions
 
             db.session.add(new_jsonmsg)
 
-            db.session.commit()
+            try:
+                db.session.commit()
+                response = {"status": "Success",
+                            "message": "New journey registered"
+                            }
+            except Exception as e:
+                db.session.rollback()
+                response = {"status": "Error",
+                        "message": str(e)
+                        } 
             sendQueue.put(data)
         else:
             response = {"status": "Error",
@@ -222,11 +228,17 @@ def update_tpv_behaviour(id, new_behaviour):
         journey = Journey.query.filter_by(journeyId =str(id)).first()
         if journey is not None:
             journey.tpv_defined_behaviour = new_behaviour #str(new_behaviour)
-            journey.tpmmd = 0  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
-            response = {"status": "Success",
+            journey.tpmmd = 0  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)   
+            try:
+                db.session.commit()
+                response = {"status": "Success",
                         "message": "Journey updated successfully"
-                        }    
-            db.session.commit()
+                        } 
+            except Exception as e:
+                db.session.rollback()
+                response = {"status": "Error",
+                        "message": str(e)
+                        }
         else:
             response = {"status": "Error",
                         "message": "Journey does not exist"
@@ -243,10 +255,17 @@ def update_tpmmd(id, value=1):
         journey = Journey.query.filter_by(journeyId =str(id)).first()
         if journey is not None:
             journey.tpmmd = value
-            response = {"status": "Success",
+                
+            try:
+                db.session.commit()
+                response = {"status": "Success",
                         "message": "tpmmd updated successfully"
-                        }    
-            db.session.commit()
+                        }
+            except Exception as e:
+                db.session.rollback()
+                response = {"status": "Error",
+                    "message": str(e)
+                    }
         else:
             response = {"status": "Error",
                         "message": "Journey does not exist"
@@ -262,11 +281,17 @@ def update_one(id):
     if new_behaviour is not None:
         journey = Journey.query.filter_by(journeyId =str(id)).first()
         if journey is not None:
-            journey.t_behaviour = new_behaviour
-            response = {"status": "Success",
+            journey.t_behaviour = new_behaviour    
+            try:
+                db.session.commit()
+                response = {"status": "Success",
                         "message": "Journey updated successfully"
-                        }    
-            db.session.commit()
+                        }
+            except Exception as e:
+                db.session.rollback()
+                response = {"status": "Error",
+                        "message": str(e)
+                        }
         else:
             response = {"status": "Error",
                         "message": "Journey does not exist"
@@ -282,9 +307,15 @@ def delete_one(id):
     del_journey = Journey.query.filter_by(journeyId=str(id)).first() 
     if del_journey is not None:
         db.session.delete(del_journey)
-        db.session.commit()
-        response = {"status": "Success",
+        try:
+            db.session.commit()
+            response = {"status": "Success",
                     "message": "Journey deleted successfully"
+                    }
+        except Exception as e:
+            db.session.rollback()
+            response = {"status": "Error",
+                    "message": str(e)
                     }
     else:
         response = {"status": "Error",

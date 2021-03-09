@@ -8,7 +8,7 @@ Created on Tue Sep 10 13:37:10 2019
 from datetime import datetime
 from config import db, ma
 
-from marshmallow import fields
+from marshmallow import fields, ValidationError
 
 
 from collections import OrderedDict 
@@ -16,6 +16,8 @@ from collections import OrderedDict
 import json
 
 from sqlalchemy.dialects.postgresql import JSONB
+
+from utils import *
 
 
 #Model
@@ -112,19 +114,18 @@ class Journey(db.Model):
 class JSONmsgSchema(ma.ModelSchema):
     journeyId = fields.String(required=True)
     json = fields.String()
-    
-
+        
 class PositionSchema(ma.ModelSchema):
-    lat = fields.Float()
-    lon = fields.Float()
+    lat = fields.Float(validate=valid_ranges_lat)
+    lon = fields.Float(validate=valid_ranges_lon)
     timestamp = fields.DateTime()
     authenticity = fields.Integer()
 
 class StartEndSchema(ma.ModelSchema):
     #authenticity = fields.Integer()
     #galileo_auth = fields.List()
-    lat = fields.Float()
-    lon = fields.Float()
+    lat = fields.Float(validate=valid_ranges_lat)
+    lon = fields.Float(validate=valid_ranges_lon)
     time =  fields.DateTime()
 
 class BehaviourSchema(ma.ModelSchema):
@@ -177,6 +178,8 @@ journeys_schema = JourneySchema(many=True)
 journeys_schema = BehaviourSchema(many=True)
 '''
 #=============================================
+
+start_end_schema = StartEndSchema()
 
 behaviour_schema = BehaviourSchema()
 behaviours_schema = BehaviourSchema(many=True)
