@@ -38,14 +38,16 @@ class Position(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     lat = db.Column(db.Numeric(9,7)) #precision & scale => https://www.postgresql.org/docs/9.6/datatype-numeric.html
     lon = db.Column(db.Numeric(10,7))
+    partialDistance = db.Column(db.Numeric())
     timestamp = db.Column(db.DateTime, default=datetime.utcnow) # , onupdate=datetime.utcnow
     authenticity = db.Column(db.Integer)
     
     journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
     
-    def __init__(self, lat, lon, timestamp, authenticity):
+    def __init__(self, lat, lon, partialDistance, timestamp, authenticity):
         self.lat = lat
         self.lon = lon
+        self.partialDistance = partialDistance
         self.timestamp = timestamp
         self.authenticity = authenticity
 #==========================================
@@ -75,6 +77,8 @@ class Journey(db.Model):
     sourceapp = db.Column(db.String(20))
     company_code = db.Column(db.String(20))
     company_trip_type = db.Column(db.String(20))
+    mainTypeSpace = db.Column(db.String()) 
+    mainTypeTime = db.Column(db.String()) 
     startdate = db.Column(db.DateTime)
     enddate =  db.Column(db.DateTime)
     distance = db.Column(db.Numeric())
@@ -90,12 +94,14 @@ class Journey(db.Model):
     positions = db.relationship("Position", cascade="all,delete", backref = "positions", uselist=True)
     #tpv_defined_behaviour = db.relationship('Behaviour', cascade="all, delete", backref = "behaviour", uselist=True)
     
-    def __init__(self, deviceId, journeyId, sourceapp, company_code, company_trip_type, startdate, enddate, distance, elapsedtime, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
+    def __init__(self, deviceId, journeyId, sourceapp, company_code, company_trip_type, mainTypeSpace, mainTypeTime, startdate, enddate, distance, elapsedtime, tpv_defined_behaviour, app_defined_behaviour, user_defined_behaviour, tpmmd=1, positions = None):
         self.deviceId = deviceId
         self.journeyId = journeyId #self.sessionId = sessionId
         self.sourceapp = sourceapp
         self.company_code = company_code
         self.company_trip_type = company_trip_type
+        self.mainTypeSpace = mainTypeSpace
+        self.mainTypeTime = mainTypeTime
         self.startdate = startdate
         self.enddate = enddate
         self.distance = distance
@@ -107,6 +113,7 @@ class Journey(db.Model):
         self.app_defined_behaviour = app_defined_behaviour #json.dumps(app_defined_behaviour)
         self.user_defined_behaviour = user_defined_behaviour #json.dumps(user_defined_behaviour)
         self.tpmmd = tpmmd
+        
 #==========================================
 
 # Schema
@@ -114,12 +121,19 @@ class Journey(db.Model):
 class JSONmsgSchema(ma.ModelSchema):
     journeyId = fields.String(required=True)
     json = fields.String()
+    
+    class Meta:
+        strict = True
         
 class PositionSchema(ma.ModelSchema):
     lat = fields.Float(validate=valid_ranges_lat)
     lon = fields.Float(validate=valid_ranges_lon)
+    partialDistance = fields.Float()  
     timestamp = fields.DateTime()
     authenticity = fields.Integer()
+    
+    class Meta:
+        strict = True
 
 class StartEndSchema(ma.ModelSchema):
     #authenticity = fields.Integer()
@@ -127,6 +141,9 @@ class StartEndSchema(ma.ModelSchema):
     lat = fields.Float(validate=valid_ranges_lat)
     lon = fields.Float(validate=valid_ranges_lon)
     time =  fields.DateTime()
+    
+    class Meta:
+        strict = True
 
 class BehaviourSchema(ma.ModelSchema):
     start = fields.Nested(StartEndSchema)
@@ -141,6 +158,8 @@ class JourneySchema(ma.ModelSchema):
     sourceapp = fields.String()
     company_code = fields.String()
     company_trip_type = fields.String()
+    mainTypeSpace = fields.String() 
+    mainTypeTime = fields.String() 
     startdate = fields.DateTime()
     enddate =  fields.DateTime()
     distance = fields.Float(allow_none=True)

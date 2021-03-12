@@ -27,9 +27,6 @@ def fetch_all():
     data = Journey.query.all()
 
     if data is not None:
-        '''response = {"status": "Success",
-                    "message": "New journey registered"
-                    }'''
         return data
     else:
         response = {"status": "Error",
@@ -104,28 +101,31 @@ def fetch_space_range():
     radius = request.args.get('radius', None)
     radius = float(radius)
 
-    logger.info("Lat ==> " + str(start_lat))   
+    '''logger.info("Lat ==> " + str(start_lat))   
     logger.info("Lon ==> " + str(start_lon))
     logger.info("Radius ==> " + str(radius))
     logger.info("Lat from DB ==> " + str(Journey.tpv_defined_behaviour["start"]["lat"].astext))
     logger.info("Lat, lon from DB ==> " + str((Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}]))))
     logger.info("Lon from DB ==> " + str(Journey.tpv_defined_behaviour["start"]["lon"].astext.cast(Float)))
     logger.info("Meters from DB ==> " + str(Journey.tpv_defined_behaviour["meters"].astext.cast(Float)))
-    
-    journey = db.session.query(Journey).filter(
-        Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}])
-        ).all()
-    logger.info("Journey ==> " + str(journey))
-    
-    for j in journey:
-        for t in j.tpv_defined_behaviour:
-            if t['meters'] > radius:
-                journey.remove(j)
-                logger.info("Journey start_lat ==> " + str(t['start']['lat']))
-                logger.info("Journey start_lon ==> " + str(t['start']['lon']))
-                logger.info("Journey start_radius ==> " + str(t['meters']) + str(type(t['meters'])))
-                logger.info("Journey start_type ==> " + str(t['type']))
-            
+    '''
+    try:
+        journey = db.session.query(Journey).filter(
+            Journey.tpv_defined_behaviour.contains([{"start": {"lat": float(start_lat), "lon": float(start_lon)}}])
+            ).all()
+        logger.info("Journey ==> " + str(journey))
+        
+        for j in journey:
+            for t in j.tpv_defined_behaviour:
+                if t['meters'] > radius:
+                    journey.remove(j)
+                    logger.info("Journey start_lat ==> " + str(t['start']['lat']))
+                    logger.info("Journey start_lon ==> " + str(t['start']['lon']))
+                    logger.info("Journey start_radius ==> " + str(t['meters']) + str(type(t['meters'])))
+                    logger.info("Journey start_type ==> " + str(t['type']))
+                
+    except Exception as e:
+        print("Error" + str(e))
     if journey is not None:
         return caseones_schema.jsonify(journey)
     else:
@@ -173,6 +173,7 @@ def add_new(): #TODO: Sanitize other conditions
             for element in anon_journey['positions']:
                 new_positions.append(Position(lat = element['lat'],
                                               lon = element['lon'],
+                                              partialDistance = element['partialDistance'],
                                               timestamp = datetime.fromtimestamp(element['time']/1000), 
                                               authenticity = element['authenticity']))
                                                                             
@@ -182,6 +183,8 @@ def add_new(): #TODO: Sanitize other conditions
                                 sourceapp = anon_journey['sourceApp'],
                                 company_code = anon_journey['company_code'],
                                 company_trip_type = anon_journey['company_trip_type'],
+                                mainTypeSpace = anon_journey['mainTypeSpace'],
+                                mainTypeTime = anon_journey['mainTypeTime'],
                                 startdate = datetime.fromtimestamp(anon_journey['startDate']/1000),
                                 enddate = datetime.fromtimestamp(anon_journey['endDate']/1000),
                                 distance = anon_journey['distance'],
