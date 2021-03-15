@@ -126,8 +126,8 @@ class JSONmsgSchema(ma.ModelSchema):
         strict = True
         
 class PositionSchema(ma.ModelSchema):
-    lat = fields.Float(validate=valid_ranges_lat)
-    lon = fields.Float(validate=valid_ranges_lon)
+    lat = fields.Float() #validate=valid_ranges_lat)
+    lon = fields.Float() #validate=valid_ranges_lon)
     partialDistance = fields.Float()  
     timestamp = fields.DateTime()
     authenticity = fields.Integer()
@@ -147,8 +147,8 @@ class PositionSchema(ma.ModelSchema):
 class StartEndSchema(ma.ModelSchema):
     #authenticity = fields.Integer()
     #galileo_auth = fields.List()
-    lat = fields.Float(validate=valid_ranges_lat)
-    lon = fields.Float(validate=valid_ranges_lon)
+    lat = fields.Float() #validate=valid_ranges_lat)
+    lon = fields.Float() #validate=valid_ranges_lon)
     time =  fields.DateTime()
     
     class Meta:
