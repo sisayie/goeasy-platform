@@ -25,10 +25,3 @@ def date_format2(value: str) -> int:
     d = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
     dt = dtm.datetime.strptime(d, '%Y-%m-%dT%H:%M:%S.%f%z')
     return int(dt.timestamp())
-
-def valid_ranges_lat(data):
-    if data<-90 or data>90:
-        raise ValidationError("Latitude out of range.")
-def valid_ranges_lon(data):
-    if data<-180 or data>180:
-        raise ValidationError("Longitude out of range.")

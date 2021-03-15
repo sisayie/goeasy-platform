@@ -8,7 +8,7 @@ Created on Tue Sep 10 13:37:10 2019
 from datetime import datetime
 from config import db, ma
 
-from marshmallow import fields, ValidationError
+from marshmallow import fields, validates_schema, ValidationError
 
 
 from collections import OrderedDict 
@@ -134,6 +134,15 @@ class PositionSchema(ma.ModelSchema):
     
     class Meta:
         strict = True
+        
+    @validates_schema
+    def valid_ranges_lat(self, data):
+        if data<-90 or data>90:
+            raise ValidationError("Latitude out of range.")
+    '''def valid_ranges_lon(data):
+        if data<-180 or data>180:
+            raise ValidationError("Longitude out of range.")'''
+    
 
 class StartEndSchema(ma.ModelSchema):
     #authenticity = fields.Integer()
