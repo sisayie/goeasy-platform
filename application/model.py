@@ -24,7 +24,7 @@ from utils import *
 #==========================================
 class JSONmsg(db.Model):
     __tablename__ = "jsonmsg"
-    #__table_args__ = {'extend_existing': True} 
+    __table_args__ = {'extend_existing': True} 
     journeyId = db.Column(db.String(40), primary_key = True)
     json = db.Column(db.String(50000))
     def __init__(self, journeyId, json):
@@ -34,7 +34,7 @@ class JSONmsg(db.Model):
 #==========================================
 class Position(db.Model):
     __tablename__ = "position"
-    #__table_args__ = {'extend_existing': True} 
+    __table_args__ = {'extend_existing': True} 
     id = db.Column(db.Integer, primary_key = True)
     lat = db.Column(db.Numeric(9,7)) #precision & scale => https://www.postgresql.org/docs/9.6/datatype-numeric.html
     lon = db.Column(db.Numeric(10,7))
@@ -71,7 +71,7 @@ class Position(db.Model):
         '''
 class Journey(db.Model):
     __tablename__ = 'journey'
-    #__table_args__ = {'extend_existing': True} 
+    __table_args__ = {'extend_existing': True} 
     deviceId = db.Column(db.Integer)
     journeyId = db.Column(db.String(40), primary_key=True) #sessionId = db.Column(db.Integer); e.g., 550e8400-e29b-41d4-a716-446655440000
     sourceapp = db.Column(db.String(20))
