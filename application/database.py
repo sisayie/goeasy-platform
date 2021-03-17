@@ -214,7 +214,7 @@ def add_new(): #TODO: Sanitize other conditions
                 db.session.rollback()
                 response = {"status": "Error",
                         "message": str(e)
-                        } 
+                        }           
             sendQueue.put(data)
         else:
             response = {"status": "Error",
