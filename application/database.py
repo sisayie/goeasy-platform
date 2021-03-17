@@ -6,7 +6,7 @@ Created on Tue Sep 10 13:37:10 2019
 """
 # Database
 import logging
-logger = logging.getLogger(__file__)
+
 
 from flask import request
 from marshmallow import Schema, fields, pprint
@@ -21,6 +21,8 @@ from utils import *
 from model import *
 
 from tpmmd import *
+
+logger = logging.getLogger(__file__)
 
 #class Database:
 def fetch_all():
@@ -135,15 +137,15 @@ def fetch_space_range():
         return response
 
 def fetch_MM(id):
-    print( " fetch_MM for journeyId:" + id)
+    logger.debug( " fetch_MM for journeyId:" + id)
     journey = Journey.query.filter_by(journeyId=str(id)).first()
-    print( "journey extracted from the DB: " + str(journey))
+    logger.debug( "journey extracted from the DB: " + str(journey))
 
     if journey is not None:
         tpmmd = journey.tpmmd  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
         if tpmmd > 0:
             # not yet done or error 
-            print( "journey is done !!!")
+            logger.debug( "journey is not done !!!")
             response = {"status":  tpmmd,
                         "message": "Result not available or error"
                     }
@@ -151,11 +153,11 @@ def fetch_MM(id):
         else:    
             mobilityMode = journey.tpv_defined_behaviour
             
-            response = "{ 'tpv_defined' : " + mobilityMode + "}"
-            print("response:" + str(response))
-            return jsonify(response)
+            response = jsonify( tpv_defined = mobilityMode) 
+            logger.debug("response: " + str(response))
+            return response
     else:
-        print( "journey is None !!!")
+        logger.debug( "journey is None !!!")
         response = {"status": "Error",
                     "message": "Journey does not exist"
                     }
@@ -210,12 +212,12 @@ def add_new(): #TODO: Sanitize other conditions
                 response = {"status": "Success",
                             "message": "New journey registered"
                             }
+                sendQueue.put(data)
             except Exception as e:
                 db.session.rollback()
                 response = {"status": "Error",
                         "message": str(e)
-                        }           
-            sendQueue.put(data)
+                        } 
         else:
             response = {"status": "Error",
                         "message": "Bad request body"
