@@ -222,12 +222,6 @@ def add_new(): #TODO: Sanitize other conditions
                                               partialDistance = element['partialDistance'],
                                               timestamp = datetime.fromtimestamp(element['time']/1000), 
                                               authenticity = element['authenticity']))
-            new_behaviours = []
-            for element in anon_journey['user_defined_behaviour']:
-                new_behaviours.append(UBehaviour(start = element['start'],
-                                              end = element['end'],
-                                              meters = element['meters'],
-                                              type = element['type']))
                                               
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
@@ -244,8 +238,7 @@ def add_new(): #TODO: Sanitize other conditions
                                 positions = new_positions,   
                                 tpv_defined_behaviour = anon_journey['tpv_defined_behaviour'],
                                 app_defined_behaviour = anon_journey['app_defined_behaviour'],
-                                #user_defined_behaviour = anon_journey['user_defined_behaviour'] #,
-                                user_defined_behaviour = new_behaviours,
+                                user_defined_behaviour = anon_journey['user_defined_behaviour'],
                                 tpmmd=1
                                 )
 

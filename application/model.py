@@ -51,7 +51,7 @@ class Position(db.Model):
         self.timestamp = timestamp
         self.authenticity = authenticity
 #==========================================
-'''
+
 class Behaviour(db.Model):
     __tablename__ = "behaviour"
     __table_args__ = {'extend_existing': True} 
@@ -69,7 +69,7 @@ class Behaviour(db.Model):
         self.meters = meters
         #self.accuracy = accuracy
         self.type = type
-'''        
+       
 class Journey(db.Model):
     __tablename__ = 'journey'
     __table_args__ = {'extend_existing': True} 
