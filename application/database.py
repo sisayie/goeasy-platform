@@ -29,7 +29,7 @@ def fetch_all():
     data = Journey.query.all()
 
     if data is not None:
-        return data
+        return journeys_schema.jsonify(data)
     else:
         response = {"status": "Error",
                     "message": "Nothing to query"
@@ -42,6 +42,7 @@ def fetch_all():
     logger.info("Journey ==> " + str(journey))
     
     if journey is not None:
+<<<<<<< Updated upstream
         #journey.app_defined_behaviour = json.dumps(journey.app_defined_behaviour)
         #journey.tpv_defined_behaviour = json.dumps(journey.tpv_defined_behaviour)
         #journey.user_defined_behaviour = json.dumps(journey.user_defined_behaviour)
@@ -49,6 +50,11 @@ def fetch_all():
         response = jsonify( tpv_defined_behaviour = mobilityMode)
 
         return journey_schema.jsonify(journey, tpv_defined_behaviour = mobilityMode)
+=======
+        udb = journey.user_defined_behaviour
+        journey.user_defined_behaviour = udb
+        return journey_schema.jsonify(journey)
+>>>>>>> Stashed changes
     else:
         response = {"status": "Error",
                     "message": "Journey does not exist"
@@ -216,7 +222,13 @@ def add_new(): #TODO: Sanitize other conditions
                                               partialDistance = element['partialDistance'],
                                               timestamp = datetime.fromtimestamp(element['time']/1000), 
                                               authenticity = element['authenticity']))
-                                                                            
+            new_behaviours = []
+            for element in anon_journey['user_defined_behaviour']:
+                new_behaviours.append(UBehaviour(start = element['start'],
+                                              end = element['end'],
+                                              meters = element['meters'],
+                                              type = element['type']))
+                                              
             new_journey = Journey(
                                 deviceId = anon_journey['deviceId'], 
                                 journeyId = anon_journey['journeyId'], 
@@ -232,7 +244,8 @@ def add_new(): #TODO: Sanitize other conditions
                                 positions = new_positions,   
                                 tpv_defined_behaviour = anon_journey['tpv_defined_behaviour'],
                                 app_defined_behaviour = anon_journey['app_defined_behaviour'],
-                                user_defined_behaviour = anon_journey['user_defined_behaviour'],
+                                #user_defined_behaviour = anon_journey['user_defined_behaviour'] #,
+                                user_defined_behaviour = new_behaviours,
                                 tpmmd=1
                                 )
 

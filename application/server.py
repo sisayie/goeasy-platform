@@ -22,9 +22,7 @@ logger = logging.getLogger(__file__)
 class Publicstorage(Resource):
     def get(self):
         #crud.get_all()
-        all_data = fetch_all()
-        
-        result = journeys_schema.jsonify(all_data)
+        result = fetch_all()
         return result
     
     @api.expect(Journey) 

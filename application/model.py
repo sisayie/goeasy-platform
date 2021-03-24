@@ -51,7 +51,8 @@ class Position(db.Model):
         self.timestamp = timestamp
         self.authenticity = authenticity
 #==========================================
-'''class Behaviour(db.Model):
+'''
+class Behaviour(db.Model):
     __tablename__ = "behaviour"
     __table_args__ = {'extend_existing': True} 
     id = db.Column(db.Integer, primary_key = True)
@@ -68,7 +69,7 @@ class Position(db.Model):
         self.meters = meters
         #self.accuracy = accuracy
         self.type = type
-        '''
+'''        
 class Journey(db.Model):
     __tablename__ = 'journey'
     __table_args__ = {'extend_existing': True} 
@@ -108,7 +109,7 @@ class Journey(db.Model):
         self.elapsedtime = elapsedtime
         if positions is None:
             positions = []
-        self.positions = positions #An address object
+        self.positions = positions
         self.tpv_defined_behaviour = tpv_defined_behaviour #json.dumps(tpv_defined_behaviour)
         self.app_defined_behaviour = app_defined_behaviour #json.dumps(app_defined_behaviour)
         self.user_defined_behaviour = user_defined_behaviour #json.dumps(user_defined_behaviour)
