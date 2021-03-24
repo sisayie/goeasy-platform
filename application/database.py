@@ -36,18 +36,56 @@ def fetch_all():
                     }
         return response
         
-def fetch_one(id):
+""" def fetch_one(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
     
     logger.info("Journey ==> " + str(journey))
     
     if journey is not None:
-        return journey_schema.jsonify(journey)
+        #journey.app_defined_behaviour = json.dumps(journey.app_defined_behaviour)
+        #journey.tpv_defined_behaviour = json.dumps(journey.tpv_defined_behaviour)
+        #journey.user_defined_behaviour = json.dumps(journey.user_defined_behaviour)
+        mobilityMode = journey.tpv_defined_behaviour
+        response = jsonify( tpv_defined_behaviour = mobilityMode)
+
+        return journey_schema.jsonify(journey, tpv_defined_behaviour = mobilityMode)
     else:
         response = {"status": "Error",
                     "message": "Journey does not exist"
                     }
-        return response
+        return response """
+
+def fetch_one(id):
+    journey = Journey.query.filter_by(journeyId =str(id)).first()
+    print(json.dumps(journey.user_defined_behaviour))
+    logger.info("Journey ==> " + str(journey))
+    if journey is not None:
+        #response = journey_schema.jsonify(journey)
+        response = jsonify( 
+                company_code = journey.company_code,
+                company_trip_type = journey.company_trip_type,
+                deviceId = str(journey.deviceId),
+                distance = int(journey.distance),
+                elapsedtime = journey.elapsedtime,
+                enddate = int(journey.enddate.timestamp()*1000),
+                journeyId = journey.journeyId,
+                mainTypeSpace = journey.mainTypeSpace,
+                mainTypeTime = journey.mainTypeTime,
+                positions = [{'lat':float(e.lat), 'lon':float(e.lon), 'partialDistance':int(e.partialDistance), 
+                                'timestamp':int(e.timestamp.timestamp()*1000), 'authenticity':int(e.authenticity) 
+                            } for e in journey.positions],
+                sourceapp = journey.sourceapp,
+                startdate = int(journey.startdate.timestamp()*1000),
+                tpmmd = int(journey.tpmmd),
+                app_defined_behaviour = journey.app_defined_behaviour,
+                user_defined_behaviour = journey.user_defined_behaviour,
+                tpv_defined_behaviour = journey.tpv_defined_behaviour
+                ) 
+    else:
+        response = {"status": "Error",
+                    "message": "Journey does not exist"
+                    }
+    return response
         
 def fetch_positions(id):
     #positions = Position.query.filter_by(journey_id =str(id)).first() # one position returned
@@ -153,7 +191,7 @@ def fetch_MM(id):
         else:    
             mobilityMode = journey.tpv_defined_behaviour
             
-            response = jsonify( tpv_defined = mobilityMode) 
+            response = jsonify( tpv_defined_behaviour = mobilityMode) 
             logger.debug("response: " + str(response))
             return response
     else:
