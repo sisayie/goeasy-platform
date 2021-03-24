@@ -63,7 +63,7 @@ def fetch_all():
 
 def fetch_one(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
-    print(json.dumps(journey.user_defined_behaviour))
+    #print(json.dumps(journey.user_defined_behaviour))
     logger.info("Journey ==> " + str(journey))
     if journey is not None:
         #response = journey_schema.jsonify(journey)
