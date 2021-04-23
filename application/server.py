@@ -53,6 +53,30 @@ class MobilityRequest(Resource):
         print("MobilityRequest data: " + str(data))
         return (data)
 
+@ns.route("/publicstorage/journeys/1")
+class ExtractionCase1(Resource):
+    def get(self):
+        data = fetch_case_1()
+        return (data)
+
+@ns.route("/publicstorage/journeys/1/<string:id>")
+class ExtractionCase1(Resource):
+    def get(self, id):
+        data = fetch_case_11(id)
+        return (data)
+        
+@ns.route("/publicstorage/journeys/2/<string:id>")
+class ExtractionCase2(Resource):
+    def get(self, id):
+        data = fetch_case_2(id)
+        return (data)
+     
+@ns.route("/publicstorage/journeys/3/<string:id>")
+class ExtractionCase2(Resource):
+    def get(self, id):
+        data = fetch_case_3()
+        return (data)
+        
 @ns.route("/publicstorage/journey/times")
 class JourneyDash(Resource):
     def get(self):

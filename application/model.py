@@ -10,7 +10,6 @@ from config import db, ma
 
 from marshmallow import fields, validates_schema, ValidationError
 
-
 from collections import OrderedDict 
 
 import json
@@ -19,18 +18,19 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from utils import *
 
-
 #Model
 #==========================================
+'''
 class JSONmsg(db.Model):
     __tablename__ = "jsonmsg"
     __table_args__ = {'extend_existing': True} 
     journeyId = db.Column(db.String(40), primary_key = True)
-    json = db.Column(db.String(50000))
+    json = db.Column(db.String(500000))
     def __init__(self, journeyId, json):
         self.journeyId = journeyId
-        self.json = str(json)
-
+        raw_data = str(json)
+        self.json = raw_data[0:JSONmsg.json.property.columns[0].type.length]
+'''
 #==========================================
 class Position(db.Model):
     __tablename__ = "position"
@@ -84,9 +84,6 @@ class Journey(db.Model):
     enddate =  db.Column(db.DateTime)
     distance = db.Column(db.Numeric())
     elapsedtime = db.Column(db.String(40))
-    '''tpv_defined_behaviour = db.Column(db.String(50000))
-    app_defined_behaviour = db.Column(db.String(50000)) 
-    user_defined_behaviour = db.Column(db.String(50000))'''
     tpv_defined_behaviour = db.Column(JSONB)
     app_defined_behaviour = db.Column(JSONB) 
     user_defined_behaviour = db.Column(JSONB)
@@ -115,17 +112,27 @@ class Journey(db.Model):
         self.user_defined_behaviour = user_defined_behaviour #json.dumps(user_defined_behaviour)
         self.tpmmd = tpmmd
         
+class EncDB(db.Model):
+    __tablename__ = 'encdb'
+    __table_args__ = {'extend_existing': True}
+    journey_id = db.Column(db.String(40), primary_key=True)
+    tp_key = db.Column(db.String())
+    
+    def __init__(self, journeyId):
+        self.journey_id = journeyId
+        self.tp_key = crypt('journey_id', gen_salt('md5'))
+    
 #==========================================
 
 # Schema
-
+'''
 class JSONmsgSchema(ma.ModelSchema):
     journeyId = fields.String(required=True)
     json = fields.String()
     
     class Meta:
         strict = True
-        
+'''       
 class PositionSchema(ma.ModelSchema):
     lat = fields.Float() #validate=valid_ranges_lat)
     lon = fields.Float() #validate=valid_ranges_lon)
@@ -144,7 +151,13 @@ class PositionSchema(ma.ModelSchema):
         if data<-180 or data>180:
             raise ValidationError("Longitude out of range.")'''
     
-
+class EncDBSchema(ma.ModelSchema):
+    journey_id = fields.String(required=True)
+    tp_key = fields.String(required=True)
+    
+    class Meta:
+        strict = True
+        
 class StartEndSchema(ma.ModelSchema):
     #authenticity = fields.Integer()
     #galileo_auth = fields.List()
@@ -195,8 +208,8 @@ class CaseOneSchema(ma.ModelSchema):
     user_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) #fields.String()
     tpmmd = fields.Integer()  
     
-jsonmsg_schema = JSONmsgSchema()
-jsonmsgs_schema = JSONmsgSchema(many=True)
+'''jsonmsg_schema = JSONmsgSchema()
+jsonmsgs_schema = JSONmsgSchema(many=True)'''
 
 #=============================================
 
@@ -206,6 +219,8 @@ journeys_schema = JourneySchema(many=True)
 '''journey_schema = BehaviourSchema()
 journeys_schema = BehaviourSchema(many=True)
 '''
+encdb_schema = EncDBSchema()
+encdbs_schema = EncDBSchema(many=True)
 #=============================================
 
 start_end_schema = StartEndSchema()

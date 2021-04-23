@@ -27,8 +27,10 @@ logger = logging.getLogger(__file__)
 #class Database:
 def fetch_all():
     data = Journey.query.all()
+    #enc_key = EncDB.query.all()
 
     if data is not None:
+        #d.journeyId = enc_key.tp_key for 
         return journeys_schema.jsonify(data)
     else:
         response = {"status": "Error",
@@ -62,7 +64,12 @@ def fetch_all():
         return response """
 
 def fetch_one(id):
+    enc_key = EncDB.query.filter_by(tp_key = str(id)).first()
+    journey_id = None
+    if enc_key is not None:
+        journey_id = enc_key.journey_id
     journey = Journey.query.filter_by(journeyId =str(id)).first()
+    #journey = Journey.query.filter_by(journeyId =str(journey_id)).first()
     #print(json.dumps(journey.user_defined_behaviour))
     #logger.info("Journey ==> " + str(journey))
     if journey is not None:
@@ -75,6 +82,7 @@ def fetch_one(id):
                 elapsedtime = journey.elapsedtime,
                 enddate = int(journey.enddate.timestamp()*1000),
                 journeyId = journey.journeyId,
+                #journeyId = enc_key.tp_key,
                 mainTypeSpace = journey.mainTypeSpace,
                 mainTypeTime = journey.mainTypeTime,
                 positions = [{'lat':float(e.lat), 'lon':float(e.lon), 'partialDistance':int(e.partialDistance), 
@@ -183,7 +191,7 @@ def fetch_space_range():
 def fetch_MM(id):
     logger.debug( " fetch_MM for journeyId:" + id)
     journey = Journey.query.filter_by(journeyId=str(id)).first()
-    logger.debug( "journey extracted from the DB: " + str(journey))
+    #logger.debug( "journey extracted from the DB: " + str(journey))
 
     if journey is not None:
         tpmmd = journey.tpmmd  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
@@ -209,8 +217,7 @@ def fetch_MM(id):
     
 def add_new(): #TODO: Sanitize other conditions
     data = request.get_json()
-    if data is not None:
-        
+    if data is not None: 
         if data['positions']:
             ano_id = rangen()             
             anon_journey = anonymize(data, 'deviceId',ano_id) 
@@ -244,13 +251,14 @@ def add_new(): #TODO: Sanitize other conditions
 
             db.session.add(new_journey)
 
+            '''
             new_jsonmsg = JSONmsg(
                                 journeyId = anon_journey['journeyId'],
                                 json = data
             )
 
             db.session.add(new_jsonmsg)
-
+            '''
             try:
                 db.session.commit()
                 response = {"status": "Success",
@@ -259,15 +267,18 @@ def add_new(): #TODO: Sanitize other conditions
                 sendQueue.put(data)
             except Exception as e:
                 db.session.rollback()
-                response = {"status": "Error",
-                        "message": str(e)
+                response = {
+                            "status": "Error",
+                            "message": str(e)
                         } 
         else:
-            response = {"status": "Error",
+            response = {
+                        "status": "Error",
                         "message": "Bad request body"
                         }
     else:
-        response = {"status": "Error",
+        response = {
+                    "status": "Error",
                     "message": "Bad request body"
                     }    
     return response
