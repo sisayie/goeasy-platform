@@ -18,6 +18,8 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from utils import *
 
+import crypt
+
 #Model
 #==========================================
 '''
@@ -120,7 +122,7 @@ class EncDB(db.Model):
     
     def __init__(self, journeyId):
         self.journey_id = journeyId
-        self.tp_key = crypt('journey_id', gen_salt('md5'))
+        self.tp_key = crypt.crypt('journey_id', crypt.METHOD_MD5) #self.tp_key = crypt('journey_id', gen_salt('md5'))
     
 #==========================================
 

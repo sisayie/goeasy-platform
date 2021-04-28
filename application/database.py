@@ -66,10 +66,11 @@ def fetch_all():
 def fetch_one(id):
     enc_key = EncDB.query.filter_by(tp_key = str(id)).first()
     journey_id = None
+    journey = None
     if enc_key is not None:
         journey_id = enc_key.journey_id
+        #journey = Journey.query.filter_by(journeyId =str(journey_id)).first()
     journey = Journey.query.filter_by(journeyId =str(id)).first()
-    #journey = Journey.query.filter_by(journeyId =str(journey_id)).first()
     #print(json.dumps(journey.user_defined_behaviour))
     #logger.info("Journey ==> " + str(journey))
     if journey is not None:
@@ -250,6 +251,8 @@ def add_new(): #TODO: Sanitize other conditions
                                 )
 
             db.session.add(new_journey)
+            new_enc = EncDB(journeyId = anon_journey['journeyId'])
+            db.session.add(new_enc)
 
             '''
             new_jsonmsg = JSONmsg(

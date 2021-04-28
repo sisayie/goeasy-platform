@@ -6,8 +6,8 @@ Created on Tue Sep 10 13:37:10 2019
 """
 import os
 
-from flask import Flask, jsonify, request
-from flask_restplus import Api,Resource
+from flask import Flask, jsonify, request, Blueprint
+from flask_restplus import Api, Resource, apidoc
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -39,10 +39,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-api = Api(app=app, 
+blueprint = Blueprint('api', __name__)#, url_prefix='/v1')
+
+api = Api(blueprint, #app=app, 
+          doc='/doc/',
           version='1.0', 
           title='GOEASY Platform', 
-          description='GOEASY Privacy-Aware Information Base and API')
+          description='GOEASY Privacy-Aware Information Base and API'
+          )  
+app.register_blueprint(blueprint)
 
 ns = api.namespace('paib',description = 'GOEASY Platform Measurements for Location Based Services (LBS)')
 

@@ -16,6 +16,11 @@ from dash_app import *
 
 logger = logging.getLogger(__file__)
 
+@api.documentation
+def swagger_ui():
+    return apidoc.ui_for(api)
+  
+
 #@api.route("/publicstorage/")
 @ns.route("/publicstorage")
 @ns.route("/anonimizer")
@@ -52,7 +57,7 @@ class MobilityRequest(Resource):
         data = fetch_MM(str(id))
         print("MobilityRequest data: " + str(data))
         return (data)
-
+'''
 @ns.route("/publicstorage/journeys/1")
 class ExtractionCase1(Resource):
     def get(self):
@@ -76,7 +81,7 @@ class ExtractionCase2(Resource):
     def get(self, id):
         data = fetch_case_3()
         return (data)
-        
+'''        
 @ns.route("/publicstorage/journey/times")
 class JourneyDash(Resource):
     def get(self):
@@ -88,7 +93,6 @@ class JourneyDash1(Resource):
     def get(self):
         data = fetch_space_range()
         return (data)
-        
 #====== dashboard APIs =================
 '''@ns.route("/dash", methods=["get"])
 class Route(Resource):
