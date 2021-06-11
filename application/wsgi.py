@@ -4,7 +4,7 @@ Created on Tue Sep 10 13:37:10 2019
 
 @author: chala
 """
-from application import application
+from server import server
 
 if __name__ == "__main__":
-    application.run()
+    server.run()

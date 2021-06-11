@@ -19,6 +19,8 @@ import json
 
 import logging
 
+from resources.errors import errors
+
 logging.basicConfig(format='%(asctime)s %(levelname)s %(name)s: %(message)s', level=logging.DEBUG)
 
 
@@ -30,14 +32,14 @@ port = os.environ['POSTGRES_PORT']
 
 DB_URI = 'postgresql+psycopg2://{user}:{pw}@{host}:{port}/{db}'.format(user=user, pw=pwd, host=host, port=port, db=db)
 
-app = Flask(__name__) 
+server = Flask(__name__) 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-app.config['SQLALCHEMY_ECHO'] = True
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-#app.config["JSON_SORT_KEYS"] = False
+server.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
+server.config['SQLALCHEMY_ECHO'] = True
+server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+server.config["JSON_SORT_KEYS"] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(server)
 
 blueprint = Blueprint('api', __name__)#, url_prefix='/v1')
 
@@ -45,9 +47,11 @@ api = Api(blueprint, #app=app,
           doc='/doc/',
           version='1.0', 
           title='GOEASY Platform', 
-          description='GOEASY Privacy-Aware Information Base and API'
+          description='GOEASY Privacy-Aware Information Base and API',
+          errors=errors
           )  
-app.register_blueprint(blueprint)
+server.register_blueprint(blueprint)
+
 
 ns = api.namespace('paib',description = 'GOEASY Platform Measurements for Location Based Services (LBS)')
 

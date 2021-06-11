@@ -39,6 +39,12 @@ services:
       - .env
     volumes:
       - .:/opt/services/dash/src
+  dashboard:
+    build: ./dashboard
+    image: dashboard:v1.0
+    container_name: dashboard
+    ports:
+      - "8009:7009"
   web:
     build: ./nginx
     container_name: web

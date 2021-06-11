@@ -61,7 +61,7 @@ class Behaviour(db.Model):
     start = db.Column(JSONB)
     end = db.Column(JSONB)
     meters = db.Column(db.Numeric(9,7))
-    #accuracy = db.Column(db.Numeric(9,7))
+    accuracy = db.Column(db.Numeric(9,7))
     type = db.Column(db.String(20))
     journey_id = db.Column(db.String(40), db.ForeignKey("journey.journeyId"))
     
@@ -69,7 +69,7 @@ class Behaviour(db.Model):
         self.start = start
         self.end = end
         self.meters = meters
-        #self.accuracy = accuracy
+        self.accuracy = accuracy
         self.type = type
        
 class Journey(db.Model):
@@ -160,23 +160,32 @@ class EncDBSchema(ma.ModelSchema):
     class Meta:
         strict = True
         
-class StartEndSchema(ma.ModelSchema):
-    #authenticity = fields.Integer()
-    #galileo_auth = fields.List()
+class StartSchema(ma.ModelSchema):
+    authenticity = fields.Integer()
+    #galileo_auth = fields.Nested()
+    #galileo_status = fields.Nested()
     lat = fields.Float() #validate=valid_ranges_lat)
     lon = fields.Float() #validate=valid_ranges_lon)
-    time =  fields.DateTime()
+    start_time =  fields.DateTime()
+    #class Meta:
+    #    strict = True
+class EndSchema(ma.ModelSchema):
+    authenticity = fields.Integer()
+    #galileo_auth = fields.Nested()
+    #galileo_status = fields.Nested()
+    lat = fields.Float() #validate=valid_ranges_lat)
+    lon = fields.Float() #validate=valid_ranges_lon)
+    end_time =  fields.DateTime()
     
-    class Meta:
-        strict = True
-
 class BehaviourSchema(ma.ModelSchema):
-    start = fields.Nested(StartEndSchema)
-    end = fields.Nested(StartEndSchema)
+    #start = fields.Nested(StartSchema)
+    #end = fields.Nested(EndSchema)
+    start = fields.Nested(PositionSchema)
+    end = fields.Nested(PositionSchema)
     meters = fields.Float()
     type = fields.String()
     accuracy = fields.Float()
-    
+
 class JourneySchema(ma.ModelSchema):
     deviceId = fields.String()
     journeyId = fields.String(required=True) 
@@ -185,14 +194,14 @@ class JourneySchema(ma.ModelSchema):
     company_trip_type = fields.String()
     mainTypeSpace = fields.String() 
     mainTypeTime = fields.String() 
-    startdate = fields.DateTime()
-    enddate =  fields.DateTime()
+    startdate = fields.DateTime(format='%Y-%m-%dT%H:%M:%S')
+    enddate =  fields.DateTime(format='%Y-%m-%dT%H:%M:%S')
     distance = fields.Float(allow_none=True)
     elapsedtime = fields.String()
     
     positions = fields.List(fields.Nested(PositionSchema))
     
-    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) #fields.String()
+    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) 
     app_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
     user_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
     
@@ -205,9 +214,9 @@ class CaseOneSchema(ma.ModelSchema):
     distance = fields.Float(allow_none=True)
     elapsedtime = fields.String()
     #start_lat, start_lon, end_lat, end_lon, meters, type, accuracy
-    app_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
-    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema))
-    user_defined_behaviour = fields.List(fields.Nested(BehaviourSchema)) #fields.String()
+    app_defined_behaviour = fields.List(fields.Nested(BehaviourSchema(many=True)))
+    tpv_defined_behaviour = fields.List(fields.Nested(BehaviourSchema(many=True)))
+    user_defined_behaviour = fields.List(fields.Nested(BehaviourSchema(many=True))) 
     tpmmd = fields.Integer()  
     
 '''jsonmsg_schema = JSONmsgSchema()
@@ -225,7 +234,7 @@ encdb_schema = EncDBSchema()
 encdbs_schema = EncDBSchema(many=True)
 #=============================================
 
-start_end_schema = StartEndSchema()
+#start_end_schema = StartEndSchema()
 
 behaviour_schema = BehaviourSchema()
 behaviours_schema = BehaviourSchema(many=True)

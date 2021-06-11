@@ -12,7 +12,7 @@ import webbrowser
 app = flask.Flask(__name__)
 
 url = 'https://galileocloud.goeasyproject.eu/GEP/paib/publicstorage'
-journey_id = '872cde91-9a77-4293-9e0e-f92c55f217d6' #'83b2e78d-51b1-4aa6-980a-7dc38834119d'
+journey_id = 'ad805ce7-448f-4845-8e38-80840ae5af59' 
 journey_ids = ['872cde91-9a77-4293-9e0e-f92c55f217d6', '83b2e78d-51b1-4aa6-980a-7dc38834119d']
 
 outfile = journey_id+".html"
@@ -22,10 +22,19 @@ import pandas as pd
 df = pd.DataFrame()
 
 #==================== Fetch Journeys using Journey id ==========================
-def getJourney(journeyId):
-    url = 'https://galileocloud.goeasyproject.eu/GEP/paib/publicstorage/'+journeyId
+   
+def getJourneys():#s_time, e_time):
+    url = 'https://galileocloud.goeasyproject.eu/GEP/paib/publicstorage/journey/times?start_time=2021-02-26 09:00:00&end_time=2021-04-28 10:59:23'
     headers = {"Accept": "application/json"}
     response = requests.get(url, headers = headers)
+    journey = json.loads(response.content)
+    return journey
+    
+def getJourney(journeyId):
+    #url_str = 'https://localhost:5003/paib/publicstorage/'+str(journeyId)
+    url_str = 'https://galileocloud.goeasyproject.eu/GEP/paib/publicstorage/'+journeyId
+    headers = {"Accept": "application/json"}
+    response = requests.get(url_str, headers = headers)
     journey = json.loads(response.content)
     return journey
 
@@ -50,7 +59,7 @@ def getMobiltiyTypes(journey):
         udb.append(user_defined_behaviour)
     return udb'''
     
-    journey.pop('app_defined_behaviour', None)
+    '''journey.pop('app_defined_behaviour', None)
     journey.pop('deviceId', None)
     journey.pop('authenticity', None)
     journey.pop('timestamp', None)
@@ -61,9 +70,13 @@ def getMobiltiyTypes(journey):
     journey.pop('position', None)
     for element in journey['user_defined_behaviour']:
         json.loads(element).pop('start', None)
-        json.loads(element).pop('end', None)
-
-    return journey    
+        json.loads(element).pop('end', None)'''
+    udb = journey.get('user_defined_behaviour')
+    
+    return jsonify(journey_id = journey.get('journeyId'), 
+                   mobility_mode = [u.get('type') for u in udb], 
+                   distance = [u.get('meters') for u in udb]
+                    )#journey    
     
 def get_route():
     #create a map
@@ -180,8 +193,25 @@ def get_s_e_position(id):
     journey = getJourney(id)
     start_lat, start_lon, end_lat, end_lon = getStartEndPositions(journey)
     mobility_mode = getMobiltiyTypes(journey)
-    return jsonify(mobility_mode) #jsonify("start":{start_lat, start_lon}, "end": {end_lat, end_lon}, "mobility": mobility_mode)
+    return mobility_mode #jsonify(mobility_mode) #jsonify("start":{start_lat, start_lon}, "end": {end_lat, end_lon}, "mobility": mobility_mode)
 
+@app.route("/modes/udb/<string:id>", methods=["get"])
+def get_journey_udb(id):
+    journey = getJourney(id)
+    udb = journey.get('user_defined_behaviour')
+    if len(udb)>1:
+        return udb
+    else:
+        return "Journey user_defined_behaviours have one or no value"
+        
+@app.route("/modes/udb", methods=["get"])
+def get_journeys_udb():
+    journeys = getJourneys()
+    udb = [j.get('user_defined_behaviour') for j in journeys]
+    if len(udb)>1:
+        return udb
+    else:
+        return "All user_defined_behaviours have one or no value"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5004, debug=True)

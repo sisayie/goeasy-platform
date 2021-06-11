@@ -15,7 +15,7 @@ from sqlalchemy.types import Float
 
 import json
 
-from privacy_guard import anonymize, rangen
+from privacy_guard import *
 from utils import *
 
 from model import *
@@ -24,19 +24,33 @@ from tpmmd import *
 
 logger = logging.getLogger(__file__)
 
+#utilities
+'''
+get all journeyIds
+get all keys corresponding to the journeyIds
+update the journeyIds
+return the journey'''
+
 #class Database:
 def fetch_all():
-    data = Journey.query.all()
-    #enc_key = EncDB.query.all()
-
-    if data is not None:
-        #d.journeyId = enc_key.tp_key for 
-        return journeys_schema.jsonify(data)
+    journeys = Journey.query.all()
+    '''
+    enc_keys = EncDB.query.all() 
+    enc_j = enc_journey(enc_keys)
+    '''
+    if journeys is not None:
+        '''for d in data:
+            [d.__dict__.update(enc_j) for d in journey] #d.journeyId = enc_key.tp_key
+        '''
+        #return journeys_schema.jsonify(journey)
+        #response = journeys_schema.jsonify(journey)
+        
+        response = journeys_schema.dump(journeys)
     else:
         response = {"status": "Error",
                     "message": "Nothing to query"
                     }
-        return response
+    return response
         
 """ def fetch_one(id):
     journey = Journey.query.filter_by(journeyId =str(id)).first()
@@ -64,18 +78,19 @@ def fetch_all():
         return response """
 
 def fetch_one(id):
+    '''
     enc_key = EncDB.query.filter_by(tp_key = str(id)).first()
     journey_id = None
     journey = None
     if enc_key is not None:
         journey_id = enc_key.journey_id
-        #journey = Journey.query.filter_by(journeyId =str(journey_id)).first()
+    '''
     journey = Journey.query.filter_by(journeyId =str(id)).first()
     #print(json.dumps(journey.user_defined_behaviour))
     #logger.info("Journey ==> " + str(journey))
     if journey is not None:
-        #response = journey_schema.jsonify(journey)
-        response = jsonify( 
+        response = journey_schema.jsonify(journey)
+        '''response = jsonify( 
                 company_code = journey.company_code,
                 company_trip_type = journey.company_trip_type,
                 deviceId = str(journey.deviceId),
@@ -95,7 +110,7 @@ def fetch_one(id):
                 app_defined_behaviour = journey.app_defined_behaviour,
                 user_defined_behaviour = journey.user_defined_behaviour,
                 tpv_defined_behaviour = journey.tpv_defined_behaviour
-                ) 
+                )''' 
     else:
         response = {"status": "Error",
                     "message": "Journey does not exist"
@@ -139,12 +154,14 @@ def fetch_time_range():
         ).all()
 
     if journey is not None:
-        return caseones_schema.jsonify(journey)
+        response = journeys_schema.jsonify(journey)
+        #return caseones_schema.jsonify(journey)
+        
     else:
         response = {"status": "Error",
                     "message": "Journey does not exist"
                     }
-        return response
+    return response
 
 from sqlalchemy.sql import column
         
@@ -182,6 +199,7 @@ def fetch_space_range():
     except Exception as e:
         print("Error" + str(e))
     if journey is not None:
+        
         return caseones_schema.jsonify(journey)
     else:
         response = {"status": "Error",
@@ -272,7 +290,7 @@ def add_new(): #TODO: Sanitize other conditions
                 db.session.rollback()
                 response = {
                             "status": "Error",
-                            "message": str(e)
+                            "message": str(e.message)
                         } 
         else:
             response = {
