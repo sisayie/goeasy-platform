@@ -67,11 +67,16 @@ def tpmmdSender():
             logger.debug("KeyError in queued message for sendQueue.")
 
         logger.debug('Sending on journeyId:' + item['journey_id'])
-        postJourneyTP(item, newIDs.get(newID))
-        time.sleep(3)
-        requestQueue.put(item['journey_id'])
-        #delayedPut(item['journey_id'], 3)
-        logger.debug('Finished sending journeyId:' + item['journey_id'])
+        if(postJourneyTP(item, newIDs.get(newID)) == 2):
+            time.sleep(0.0005)
+            #time.sleep(1/(sendQueue.qsize()+10))
+            requestQueue.put(item['journey_id'])
+            #delayedPut(item['journey_id'], 3)
+        else:
+            #do not keep the newID anymore
+            newIDs.pop(newID)
+            
+        logger.debug('Finished sending journeyId:' + item['journey_id'] + ', sendQueue_size: ' + str(sendQueue.qsize()))
         sendQueue.task_done()
 
 
