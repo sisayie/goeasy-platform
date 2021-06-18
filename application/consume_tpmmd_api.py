@@ -49,12 +49,29 @@ def postJourneyTP(journey, journeyId): # Original journeyId provided, as the jou
     headers = {"Accept": "application/json"}
     # call get service with headers and params
     #logger.debug("This is the data posted:\n" + json.dumps( journey, sort_keys=True, indent=4) )
-    response = requests.post(url,json= journey, headers=headers)
-    logger.debug(f'POST request to TP, response.status_code: {response.status_code}')
-    #logger.debug(f'POST request to TP, response.text: {response.text}')
-    update_tpmmd(journeyId, 2)  # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 100 < error_code)
-    #logger.debug(f'POST request to TP, response.content: {response.content}')
-    # respons OK, update tpmmd in db
+    response_status = 1 # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 10XXX-send_error_code, 20XXX-retrive_error_code)
+    try: 
+        response = requests.post(url,json= journey, headers=headers)
+        logger.debug(f'POST request to TP, response.status_code: {response.status_code}')
+    except requests.exceptions.Timeout:
+        # Maybe set up for a retry, or continue in a retry loop
+        logger.debug(f'POST request to TP, Timeout exception: {response.status_code}')
+    except requests.exceptions.TooManyRedirects:
+        # Tell the user their URL was bad and try a different one
+        logger.debug(f'POST request to TP, TooManyRedirects exception: {response.status_code}')
+    except requests.exceptions.RequestException as e:
+        # catastrophic error. bail.
+        logger.debug(f'POST request to TP, RequestException exception: {response.status_code}')
+    
+    if (response.status_code == requests.codes.ok):
+        response_status = 2 # detection status: 2-sent,
+    else:
+        response_status = 10000 + response.status_code  # (10XXX-send_error_code, 20XXX-retrive_error_code)
+        logger.debug(f'POST request to TP, response.text: {response.text}')
+        #logger.debug(f'POST request to TP, response.content: {response.content}')
+        
+    update_tpmmd(journeyId, response_status) # tpmmd detection status (0-done,  1-not_sent, 2-sent, 3-timeout, 10XXX-send_error_code, 20XXX-retrive_error_code)
+    return response_status
 	
 ############### 3 ################3
 
@@ -66,10 +83,11 @@ def getTPMM(newID, journeyId):
     # call get service with headers and params
     response = requests.get(url, headers=headers)
     logger.debug(f'GET request to TP, response.status_code: {response.status_code}')
-    logger.info(f'GET request to TP, response.text: {response.text}')
+    #logger.info(f'GET request to TP, response.text: {response.text}')
     if (response.status_code == requests.codes.ok):
         data = json.loads(response.content)
         update_tpv_behaviour(journeyId, data['tpv_defined'])
+        logger.debug("This is the data returned bay the TPMMD:\n" + json.dumps( data, indent=4) )
         #logger.debug("GET request to TP, json.loads(response.content):" + str(data['tpv_defined']))
         #logger.debug("GET request to TP, response.content:" + str(response.content))
     
