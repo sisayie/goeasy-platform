@@ -76,7 +76,8 @@ def tpmmdSender():
             #do not keep the newID anymore
             newIDs.pop(newID)
             
-        logger.debug('Finished sending journeyId:' + item['journey_id'] + ', sendQueue_size: ' + str(sendQueue.qsize()))
+        logger.debug('Finished sending journeyId:' + item['journey_id'] + ', sendQueue_size: ' 
+                     + str(sendQueue.qsize())+ ', requestQueue_size: ' + str(requestQueue.qsize()))
         sendQueue.task_done()
 
 
